@@ -207,22 +207,25 @@
             });
             if(filtered.length === 0 && eventData.length > 0) { grid.innerHTML = `<p class="text-white col-span-2 text-center opacity-60 py-10">No hi ha esdeveniments.</p>`; return; }
             grid.innerHTML = filtered.map(ev => `
-                <div onclick="abrirDetalle(${ev.ID})" class="bg-white rounded-[1.5rem] overflow-hidden shadow-xl active:scale-95 transition-all">
+                <div onclick="abrirDetalle('${ev.ID}')" class="bg-white rounded-[1.5rem] overflow-hidden shadow-xl active:scale-95 transition-all cursor-pointer">
                     <img src="${ev.Imagen_URL}" class="h-32 w-full object-cover" loading="lazy">
                     <div class="p-3">
-                        <h3 class="font-bold text-[13px] text-gray-800 leading-tight h-8 overflow-hidden">${ev['Titulo_'+currentLang.toUpperCase()] || ev.Titulo_CA}</h3>
+                        <h3 class="font-bold text-[13px] text-gray-800 leading-tight h-8 overflow-hidden">${ev['Titulo_'+currentLang.toUpperCase()] || ev.Titulo_CAT || ev.Titulo_CA}</h3>
                         <p class="text-[10px] text-gray-400 mt-1 uppercase font-bold">${ev.Municipio}</p>
                     </div>
                 </div>`).join('');
         }
 
         function abrirDetalle(id) {
-            const ev = eventData.find(e => e.ID == id);
+            // REPARACIÓN BLINDADA: Comparamos como String para que acepte cualquier ID del Excel
+            const ev = eventData.find(e => String(e.ID) === String(id));
+            if(!ev) return;
+
             const lang = currentLang.toUpperCase();
-            document.getElementById('titulo-det').innerText = ev['Titulo_'+lang] || ev.Titulo_CA;
+            document.getElementById('titulo-det').innerText = ev['Titulo_'+lang] || ev.Titulo_CAT || ev.Titulo_CA;
             document.getElementById('lugar-det').innerText = ev.Municipio;
             document.getElementById('fecha-det').innerText = ev.Fecha ? ev.Fecha.split('T')[0].split('-').reverse().join('/') : "";
-            document.getElementById('hora-det').innerText = ev.Hora ? ev.Hora.split('T')[1].substring(0, 5) : "--:--";
+            document.getElementById('hora-det').innerText = ev.Hora ? ev.Hora.toString().substring(0, 5) : "--:--";
             document.getElementById('precio-det').innerText = (ev.Precio && !isNaN(ev.Precio)) ? ev.Precio + " €" : ev.Precio;
             document.getElementById('desc-det').innerText = ev['Desc_'+lang] || ev.Desc_CA;
             document.getElementById('img-det').src = ev.Imagen_URL;
@@ -238,7 +241,10 @@
             document.querySelectorAll('.options-menu').forEach(x => x.classList.remove('show'));
             if(!isVisible) m.classList.add('show'); 
         }
-        function abrirMapa() { /* Lógica mapa */ }
+        function abrirMapa() { 
+            const dir = document.getElementById('direccion-det').innerText;
+            window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(dir)}`, '_blank');
+        }
         function cerrarDetalle() { document.getElementById('pantalla-detalle').classList.add('hidden'); }
         function irAReserva() { if(currentTicketUrl) window.open(currentTicketUrl, '_blank'); }
         function entrarApp() { document.getElementById('splash-screen').style.opacity = '0'; setTimeout(() => { document.getElementById('splash-screen').style.display = 'none'; document.getElementById('main-content').style.display = 'block'; setTimeout(() => document.getElementById('main-content').style.opacity = '1', 50); loadData(); }, 600); }
