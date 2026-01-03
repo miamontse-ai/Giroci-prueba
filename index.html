@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>GirOci</title>
-    <link rel="manifest" href="manifest.json?v=25">
+    <link rel="manifest" href="manifest.json?v=30">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     
-    <link rel="icon" type="image/png" href="icon.png?v=25">
-    <link rel="apple-touch-icon" href="icon.png?v=25">
+    <link rel="icon" type="image/png" href="icon.png?v=30">
+    <link rel="apple-touch-icon" href="icon.png?v=30">
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -151,10 +151,6 @@
             document.getElementById('txt-filter-type').innerText = (currentCategory==='all') ? t.filterType : categoryNames[currentCategory][l];
             document.getElementById('txt-filter-comarca').innerText = (currentComarca==='all') ? t.comarca : currentComarca;
             document.getElementById('txt-events-title').innerText = t.title;
-            document.querySelectorAll('.lbl-place').forEach(el => el.innerText = t.place);
-            document.querySelectorAll('.lbl-date').forEach(el => el.innerText = t.date);
-            document.querySelectorAll('.lbl-price').forEach(el => el.innerText = t.price);
-            document.querySelectorAll('.lbl-time').forEach(el => el.innerText = t.time);
             renderEvents(); renderCategories(); renderComarcas();
         }
 
@@ -164,10 +160,7 @@
         function renderCategories() {
             const menu = document.getElementById('typeMenu');
             let h = `<div class="option-item" onclick="filterCat('all')"><i class="fas fa-th-large text-gray-400"></i> ${translations[currentLang].all}</div>`;
-            for (let k in categoryNames) { 
-                const cat = categoryNames[k];
-                h += `<div class="option-item" onclick="filterCat('${k}')"><i class="fas ${cat.icon}" style="color:${cat.iconColor}"></i> ${cat[currentLang]}</div>`; 
-            }
+            for (let k in categoryNames) { h += `<div class="option-item" onclick="filterCat('${k}')"><i class="fas ${categoryNames[k].icon}" style="color:${categoryNames[k].iconColor}"></i> ${categoryNames[k][currentLang]}</div>`; }
             menu.innerHTML = h;
         }
 
@@ -203,11 +196,11 @@
             document.getElementById('lugar-det').innerText = ev.Municipio;
             document.getElementById('fecha-det').innerText = ev.Fecha ? ev.Fecha.split('T')[0].split('-').reverse().join('/') : "";
             document.getElementById('hora-det').innerText = ev.Hora ? ev.Hora.split('T')[1].substring(0, 5) : "--:--";
-            document.getElementById('precio-det').innerText = (ev.Precio && !isNaN(ev.Precio)) ? ev.Precio + " €" : ev.Precio;
+            document.getElementById('precio-det').innerText = ev.Precio + " €";
             document.getElementById('desc-det').innerText = ev['Desc_'+lang] || ev.Desc_CA;
             document.getElementById('img-det').src = ev.Imagen_URL;
             document.getElementById('img-det-bg').src = ev.Imagen_URL;
-            document.getElementById('direccion-det').innerText = ev.Direccion || ev.Municipio;
+            document.getElementById('direccion-det').innerText = (ev.Direccion || '') + " " + ev.Municipio;
             currentTicketUrl = ev.Link_Entradas;
             document.getElementById('btn-reserve').style.display = (currentTicketUrl && currentTicketUrl.length > 5) ? "block" : "none";
             document.getElementById('pantalla-detalle').classList.remove('hidden');
@@ -225,4 +218,3 @@
     </script>
 </body>
 </html>
-
