@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>GirOci - Prova</title>
+    <style>
+        /* RESET Y BASE BLINDADA */
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body, html { margin: 0; padding: 0; height: 100%; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f0f2f5; overflow: hidden; }
+
+        /* PANTALLA DE CARGA (LOGO GRANDE) */
+        #splash-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: #ffffff; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; z-index: 2000;
+        }
+        .logo-splash { 
+            width: 85%; max-width: 450px; /* Logo más grande según petición */
+            margin-bottom: 40px; transition: transform 0.3s ease;
+        }
+        .btn-entrar {
+            padding: 18px 50px; font-size: 1.3rem; font-weight: bold;
+            background: #00a859; color: white; border: none; border-radius: 50px;
+            box-shadow: 0 4px 15px rgba(0,168,89,0.3); cursor: pointer;
+        }
+
+        /* APP PRINCIPAL */
+        #main-app { display: none; height: 100%; flex-direction: column; }
+
+        /* CABECERA TRANSLÚCIDA */
+        .header {
+            background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px); padding: 15px;
+            border-bottom: 1px solid rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 100;
+        }
+
+        /* FILTROS (SCROLL GRIS) */
+        .filtros-container {
+            display: flex; overflow-x: auto; padding: 10px 5px; gap: 10px;
+            background: #e9ecef; scrollbar-width: none;
+        }
+        .filtros-container::-webkit-scrollbar { display: none; }
+        .chip {
+            padding: 8px 18px; background: white; border-radius: 20px;
+            white-space: nowrap; border: 1px solid #ddd; font-size: 0.9rem;
+        }
+        .chip.active { background: #00a859; color: white; border-color: #00a859; }
+
+        /* LISTA DE EVENTOS */
+        .eventos-list { flex: 1; overflow-y: auto; padding: 15px; }
+        .card {
+            background: white; border-radius: 15px; margin-bottom: 15px;
+            overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .card-img { width: 100%; height: 180px; background: #ddd; object-fit: cover; }
+        .card-info { padding: 15px; }
+        .card-title { font-size: 1.1rem; font-weight: bold; margin: 0 0 5px 0; }
+        .card-loc { color: #666; font-size: 0.85rem; }
+    </style>
+</head>
+<body>
+
+    <div id="splash-screen">
+        <img src="logo.png" alt="GirOci" class="logo-splash" onerror="this.src='https://via.placeholder.com/400x400?text=GirOci+Logo'">
+        <button class="btn-entrar" onclick="iniciarApp()">ENTRAR</button>
+    </div>
+
+    <div id="main-app">
+        <div class="header">
+            <h2 style="margin:0; color:#00a859;">GirOci</h2>
+        </div>
+        
+        <div class="filtros-container" id="filtros">
+            <div class="chip active" onclick="filtrar('Totes')">Totes</div>
+            <div class="chip" onclick="filtrar('Gironès')">Gironès</div>
+            <div class="chip" onclick="filtrar('Baix Empordà')">Baix Empordà</div>
+            <div class="chip" onclick="filtrar('Alt Empordà')">Alt Empordà</div>
+            <div class="chip" onclick="filtrar('La Selva')">La Selva</div>
+            <div class="chip" onclick="filtrar('Pla de l\'Estany')">Pla de l'Estany</div>
+        </div>
+
+        <div class="eventos-list" id="lista-eventos">
+            </div>
+    </div>
+
+    <script>
+        const eventos = [
+            { titulo: "Fira de Girona", comarca: "Gironès", lugar: "Girona Ciutat" },
+            { titulo: "Jazz a la Platja", comarca: "Baix Empordà", lugar: "Palamós" },
+            { titulo: "Ruta Dalí", comarca: "Alt Empordà", lugar: "Figueres" },
+            { titulo: "Festa de l'Estany", comarca: "Pla de l'Estany", lugar: "Banyoles" }
+        ];
+
+        function iniciarApp() {
+            document.getElementById('splash-screen').style.transition = '0.5s';
+            document.getElementById('splash-screen').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('splash-screen').style.display = 'none';
+                document.getElementById('main-app').style.display = 'flex';
+                renderizarEventos('Totes');
+            }, 500);
+        }
+
+        function renderizarEventos(filtro) {
+            const lista = document.getElementById('lista-eventos');
+            lista.innerHTML = '';
+            const filtrados = filtro === 'Totes' ? eventos : eventos.filter(e => e.comarca === filtro);
+            
+            filtrados.forEach(e => {
+                lista.innerHTML += `
+                    <div class="card">
+                        <div class="card-img" style="background-color:#eee; display:flex; align-items:center; justify-content:center; color:#999">Imatge de l'esdeveniment</div>
+                        <div class="card-info">
+                            <div class="card-title">${e.titulo}</div>
+                            <div class="card-loc">${e.comarca} - ${e.lugar}</div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function filtrar(comarca) {
+            const chips = document.querySelectorAll('.chip');
+            chips.forEach(c => c.classList.remove('active'));
+            event.target.classList.add('active');
+            renderizarEventos(comarca);
+        }
+    </script>
+</body>
+</html>
