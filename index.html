@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GirOci - Master Final Fix</title>
-    <link rel="manifest" href="manifest.json?v=7">
+    <title>GirOci - Master Design</title>
+    <link rel="manifest" href="manifest.json?v=8">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="apple-touch-icon" href="logo.png">
@@ -46,10 +46,12 @@
                 </div>
             </div>
         </div>
-        <div class="flex items-center justify-center gap-4 mb-8 px-2">
-            <img src="logo.png" alt="Logo" class="w-20 h-20 object-contain drop-shadow-xl shrink-0">
-            <h1 class="text-5xl text-white font-bold tracking-tight">GirOci</h1>
+
+        <div class="flex items-center justify-center gap-2 mb-10 px-2">
+            <img src="logo.png" alt="Logo" class="w-28 h-28 object-contain drop-shadow-2xl shrink-0">
+            <h1 class="text-6xl text-white font-black tracking-tighter -ml-1">GirOci</h1>
         </div>
+
         <div class="flex gap-2 mb-6">
             <div class="custom-select flex-1" id="typeSelect">
                 <div class="bg-[#1e5d8a] select-trigger !py-4 !rounded-2xl shadow-xl" onclick="toggleMenu('typeMenu')">
@@ -150,21 +152,18 @@
 
         function filterCat(c) { currentCategory = c; const t = translations[currentLang]; document.getElementById('txt-filter-type').innerText = (c === 'all') ? t.filterType : (categoryNames[c][currentLang]); toggleMenu('typeMenu'); renderEvents(); }
         function filterCom(c) { currentComarca = c; document.getElementById('txt-filter-comarca').innerText = (c === 'all') ? translations[currentLang].comarca : c; toggleMenu('comarcaMenu'); renderEvents(); }
-        
         function renderCategories() {
             const menu = document.getElementById('typeMenu');
             let h = `<div class="option-item" onclick="filterCat('all')">${translations[currentLang].all}</div>`;
             for (let k in categoryNames) { h += `<div class="option-item" onclick="filterCat('${k}')">${categoryNames[k][currentLang]}</div>`; }
             menu.innerHTML = h;
         }
-
         function renderComarcas() {
             const menu = document.getElementById('comarcaMenu');
             let h = `<div class="option-item" onclick="filterCom('all')">${translations[currentLang].all}</div>`;
             comarcas.forEach(c => { h += `<div class="option-item" onclick="filterCom('${c}')">${c}</div>`; });
             menu.innerHTML = h;
         }
-
         function renderEvents() {
             const grid = document.getElementById('events-grid');
             let filtered = eventData.filter(ev => {
@@ -182,7 +181,6 @@
                     </div>
                 </div>`).join('');
         }
-
         function abrirDetalle(id) {
             currentEvent = eventData.find(e => e.ID == id);
             const ev = currentEvent, lang = currentLang.toUpperCase();
@@ -205,7 +203,6 @@
             document.getElementById('btn-reserve').style.display = (currentTicketUrl && currentTicketUrl.length > 5) ? "block" : "none";
             document.getElementById('pantalla-detalle').classList.remove('hidden');
         }
-
         function toggleMenu(id) { const m = document.getElementById(id); const isVisible = m.classList.contains('show'); document.querySelectorAll('.options-menu').forEach(x => x.classList.remove('show')); if(!isVisible) m.classList.add('show'); }
         function abrirMapa() { if (currentEvent) { window.open('https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(`${currentEvent.Direccion || ''} ${currentEvent.Municipio}, Girona`), '_blank'); } }
         function cerrarDetalle() { document.getElementById('pantalla-detalle').classList.add('hidden'); }
