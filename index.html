@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GirOci - Master Design</title>
-    <link rel="manifest" href="manifest.json?v=8">
+    <title>GirOci - Master Design Perfect</title>
+    <link rel="manifest" href="manifest.json?v=9">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="apple-touch-icon" href="logo.png">
@@ -15,7 +15,7 @@
         #splash-screen { position: fixed; inset: 0; width: 100vw; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: space-around; z-index: 1000; background: linear-gradient(180deg, #38b6ff 0%, #43e97b 100%); transition: all 0.6s ease; padding: 2rem 0; }
         .logo-splash { width: 85%; max-width: 450px; filter: drop-shadow(0 20px 40px rgba(0,0,0,0.3)); }
         .btn-entrar { background: white; color: #1e5d8a; padding: 20px 70px; border-radius: 50px; font-weight: 900; font-size: 1.5rem; box-shadow: 0 10px 30px rgba(0,0,0,0.25); cursor: pointer; border: none; z-index: 1001; }
-        #main-content { display: none; opacity: 0; transition: opacity 0.5s ease; padding: 15px; max-width: 500px; margin: 0 auto; }
+        #main-content { display: none; opacity: 0; transition: opacity 0.5s ease; padding: 10px 15px; max-width: 500px; margin: 0 auto; }
         .custom-select { position: relative; user-select: none; }
         .select-trigger { background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.4); border-radius: 12px; padding: 8px 12px; color: white; display: flex; align-items: center; justify-content: space-between; font-weight: bold; font-size: 13px; cursor: pointer; }
         .options-menu { position: absolute; top: 115%; right: 0; background: white; border-radius: 24px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2); width: 220px; display: none; z-index: 1000; overflow-y: auto; max-height: 380px; padding: 8px 0; border: 1px solid rgba(0,0,0,0.05); }
@@ -31,7 +31,7 @@
         <button class="btn-entrar" onclick="entrarApp()">ENTRAR</button>
     </div>
     <div id="main-content">
-        <div class="flex justify-end mb-4">
+        <div class="flex justify-end mb-2">
             <div class="custom-select w-[100px]" id="langSelect">
                 <div class="select-trigger" onclick="toggleMenu('langMenu')">
                     <span id="selected-lang-content" class="flex items-center gap-2"><img src="bandera_ca.png" class="flag-icon"> CAT</span>
@@ -47,8 +47,8 @@
             </div>
         </div>
 
-        <div class="flex items-center justify-center gap-2 mb-10 px-2">
-            <img src="logo.png" alt="Logo" class="w-28 h-28 object-contain drop-shadow-2xl shrink-0">
+        <div class="flex items-center justify-center gap-2 mb-6 px-2">
+            <img src="logo.png" alt="Logo" class="w-32 h-32 object-contain drop-shadow-2xl shrink-0">
             <h1 class="text-6xl text-white font-black tracking-tighter -ml-1">GirOci</h1>
         </div>
 
@@ -68,6 +68,7 @@
                 <div class="options-menu !w-full" id="comarcaMenu" style="left:0;"></div>
             </div>
         </div>
+
         <h2 id="txt-events-title" class="text-white text-2xl font-bold mb-5 ml-1">Esdeveniments Propers</h2>
         <div id="events-grid" class="grid grid-cols-2 gap-4 mb-10"><div class="skeleton"></div><div class="skeleton"></div></div>
     </div>
@@ -106,7 +107,7 @@
             es: { filterType: "Tipo de Ocio", comarca: "Comarca", title: "Próximos Eventos", place: "Lugar", date: "Fecha", price: "Precio", time: "Hora", all: "Todos" },
             en: { filterType: "Leisure Type", comarca: "County", title: "Upcoming Events", place: "Location", date: "Date", price: "Price", time: "Time", all: "All" },
             fr: { filterType: "Loisirs", comarca: "Arrondissement", title: "Prochains Événements", place: "Lieu", date: "Date", price: "Prix", time: "Heure", all: "Tous" },
-            de: { filterType: "Freizeit", comarca: "Landkreis", title: "Kommende Events", place: "Ort", date: "Datum", price: "Preis", time: "Zeit", all: "Alle" }
+            de: { filterType: "Freizeit", comarca: "Landkreis", title: "Kommende Events", place: "Ort", date: "Datum", price: "Precio", time: "Zeit", all: "Alle" }
         };
 
         const categoryNames = {
@@ -211,3 +212,4 @@
     </script>
 </body>
 </html>
+
