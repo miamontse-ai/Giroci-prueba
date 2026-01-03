@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>GirOci - Master Version Final</title>
     
+    <link rel="manifest" href="manifest.json">
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="logo.png">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
@@ -34,7 +40,6 @@
         .custom-select { position: relative; user-select: none; }
         .select-trigger { background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.4); border-radius: 12px; padding: 8px 12px; color: white; display: flex; align-items: center; justify-content: space-between; font-weight: bold; font-size: 13px; cursor: pointer; }
         
-        /* ESTILO REPLICADO DE LA IMAGEN: Fondo degradado translúcido */
         .options-menu { 
             position: absolute; top: 115%; right: 0; 
             background: linear-gradient(180deg, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0.4) 100%); 
@@ -47,7 +52,6 @@
             padding: 8px 0;
         }
 
-        /* BARRA DE SCROLL REPLICADA: Fina y gris */
         .options-menu::-webkit-scrollbar { width: 6px; }
         .options-menu::-webkit-scrollbar-track { background: transparent; }
         .options-menu::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.3); border-radius: 10px; border: 2px solid transparent; background-clip: padding-box; }
@@ -166,7 +170,7 @@
             es: { filterType: "Tipo de Ocio", comarca: "Comarca", title: "Próximos Eventos", place: "Lugar", date: "Fecha", price: "Precio", time: "Hora", all: "Todos" },
             en: { filterType: "Leisure Type", comarca: "County", title: "Upcoming Events", place: "Location", date: "Date", price: "Price", time: "Time", all: "All" },
             fr: { filterType: "Loisirs", comarca: "Arrondissement", title: "Prochains Événements", place: "Lieu", date: "Date", price: "Prix", time: "Heure", all: "Tous" },
-            de: { filterType: "Freizeit", comarca: "Landkreis", title: "Kommende Events", place: "Ort", date: "Datum", price: "Precio", time: "Zeit", all: "Alle" }
+            de: { filterType: "Freizeit", comarca: "Landkreis", title: "Kommende Events", place: "Ort", date: "Datum", price: "Preis", time: "Zeit", all: "Alle" }
         };
 
         const categoryNames = {
@@ -294,7 +298,7 @@
         function abrirMapa() {
             if (currentEvent) {
                 const query = encodeURIComponent(`${currentEvent.Direccion || ''} ${currentEvent.Municipio}, Girona`);
-                window.open(`https://www.google.com/maps/search/?api=1&query=${query}`, '_blank');
+                window.open('https://www.google.com/maps/search/?api=1&query=' + query, '_blank');
             }
         }
 
