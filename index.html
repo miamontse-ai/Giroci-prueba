@@ -4,89 +4,38 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>GirOci - Master Version Final</title>
-    
     <link rel="manifest" href="manifest.json">
-
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="apple-touch-icon" href="logo.png">
-
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
     <style>
-        body {
-            background: linear-gradient(180deg, #38b6ff 0%, #43e97b 100%);
-            min-height: 100vh;
-            font-family: 'ui-sans-serif', system-ui, -apple-system, sans-serif;
-            margin: 0;
-            overflow-x: hidden; 
-        }
-        
-        #splash-screen {
-            position: fixed; inset: 0; width: 100vw; height: 100vh;
-            overflow: hidden; display: flex; flex-direction: column;
-            align-items: center; justify-content: space-around;
-            z-index: 1000; background: linear-gradient(180deg, #38b6ff 0%, #43e97b 100%);
-            transition: all 0.6s ease; padding: 2rem 0;
-        }
+        body { background: linear-gradient(180deg, #38b6ff 0%, #43e97b 100%); min-height: 100vh; font-family: 'ui-sans-serif', system-ui, -apple-system, sans-serif; margin: 0; overflow-x: hidden; }
+        #splash-screen { position: fixed; inset: 0; width: 100vw; height: 100vh; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: space-around; z-index: 1000; background: linear-gradient(180deg, #38b6ff 0%, #43e97b 100%); transition: all 0.6s ease; padding: 2rem 0; }
         .logo-splash { width: 85%; max-width: 450px; max-height: 60vh; object-fit: contain; filter: drop-shadow(0 20px 40px rgba(0,0,0,0.3)); }
         .btn-entrar { background: white; color: #1e5d8a; padding: 20px 70px; border-radius: 50px; font-weight: 900; font-size: 1.5rem; box-shadow: 0 10px 30px rgba(0,0,0,0.25); cursor: pointer; border: none; z-index: 1001; transition: transform 0.2s; }
-        .btn-entrar:active { transform: scale(0.95); }
-
         #main-content { display: none; opacity: 0; transition: opacity 0.8s ease; padding: 20px; max-width: 500px; margin: 0 auto; }
-        .app-title { font-weight: 500; letter-spacing: 0.05em; text-shadow: 2px 4px 10px rgba(0,0,0,0.25); }
-
         .custom-select { position: relative; user-select: none; }
         .select-trigger { background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.4); border-radius: 12px; padding: 8px 12px; color: white; display: flex; align-items: center; justify-content: space-between; font-weight: bold; font-size: 13px; cursor: pointer; }
-        
-        .options-menu { 
-            position: absolute; top: 115%; right: 0; 
-            background: linear-gradient(180deg, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0.4) 100%); 
-            backdrop-filter: blur(15px); 
-            border-radius: 24px; 
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); 
-            width: 220px; display: none; z-index: 1000; 
-            overflow-y: auto; max-height: 380px;
-            border: 1px solid rgba(255,255,255,0.5);
-            padding: 8px 0;
-        }
-
-        .options-menu::-webkit-scrollbar { width: 6px; }
-        .options-menu::-webkit-scrollbar-track { background: transparent; }
-        .options-menu::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.3); border-radius: 10px; border: 2px solid transparent; background-clip: padding-box; }
-
+        .options-menu { position: absolute; top: 115%; right: 0; background: linear-gradient(180deg, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0.4) 100%); backdrop-filter: blur(15px); border-radius: 24px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); width: 220px; display: none; z-index: 1000; overflow-y: auto; max-height: 380px; border: 1px solid rgba(255,255,255,0.5); padding: 8px 0; }
         .options-menu.show { display: block; }
-        .option-item { 
-            padding: 12px 20px; display: flex; align-items: center; gap: 15px; 
-            color: #1e293b; font-size: 15px; cursor: pointer; font-weight: 800; 
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-            transition: all 0.2s;
-        }
-        .option-item:hover { background: rgba(255, 255, 255, 0.3); }
-        .option-item:active { background: rgba(255, 255, 255, 0.5); }
-
+        .option-item { padding: 12px 20px; display: flex; align-items: center; gap: 15px; color: #1e293b; font-size: 15px; cursor: pointer; font-weight: 800; border-bottom: 1px solid rgba(255, 255, 255, 0.2); transition: all 0.2s; }
         .flag-icon { width: 22px; height: 15px; object-fit: cover; border-radius: 2px; }
-
         #loading-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 3000; color: white; flex-direction: column; gap: 10px; }
     </style>
 </head>
 <body>
-
     <div id="loading-overlay"><i class="fas fa-circle-notch fa-spin text-4xl"></i><p>Carregant dades...</p></div>
-
     <div id="splash-screen">
         <img src="logo.png" alt="GirOci Logo" class="logo-splash">
         <button class="btn-entrar" onclick="entrarApp()">ENTRAR</button>
     </div>
-
     <div id="main-content">
         <div class="flex justify-end mb-2">
             <div class="custom-select w-[110px]" id="langSelect">
                 <div class="select-trigger" onclick="toggleMenu('langMenu')">
-                    <span id="selected-lang-content" class="flex items-center gap-2">
-                        <img src="bandera_ca.png" class="flag-icon"> CAT
-                    </span>
+                    <span id="selected-lang-content" class="flex items-center gap-2"><img src="bandera_ca.png" class="flag-icon"> CAT</span>
                     <i class="fas fa-chevron-down text-[10px]"></i>
                 </div>
                 <div class="options-menu !w-[130px]" id="langMenu">
@@ -94,38 +43,30 @@
                     <div class="option-item" onclick="selectLang('es', 'bandera_es.png', 'ESP')"><img src="bandera_es.png" class="flag-icon"> ESP</div>
                     <div class="option-item" onclick="selectLang('en', 'bandera_en.png', 'ENG')"><img src="bandera_en.png" class="flag-icon"> ENG</div>
                     <div class="option-item" onclick="selectLang('fr', 'bandera_fr.png', 'FRA')"><img src="bandera_fr.png" class="flag-icon"> FRA</div>
-                    <div class="option-item" onclick="selectLang('de', 'bandera_de.png', 'DEU')"><img src="bandera_de.png" class="flag-icon"> DEU</div>
+                    <div class="option-item" onclick="selectLang('de', 'bandera_de.png', 'DE')"><img src="bandera_de.png" class="flag-icon"> DE</div>
                 </div>
             </div>
         </div>
-
         <div class="flex items-center justify-center gap-6 mb-6">
             <img src="logo.png" alt="Logo" class="w-48 h-48 object-contain drop-shadow-2xl">
-            <h1 class="text-7xl text-white app-title">GirOci</h1>
+            <h1 class="text-7xl text-white font-medium tracking-wider">GirOci</h1>
         </div>
-
         <div class="flex gap-2 mb-6">
             <div class="custom-select flex-1" id="typeSelect">
                 <div class="bg-[#1e5d8a] select-trigger !py-4 !rounded-2xl shadow-xl active:scale-95" onclick="toggleMenu('typeMenu')">
-                    <div class="flex items-center gap-2">
-                        <i class="fas fa-list text-cyan-300"></i> <span id="txt-filter-type">Tipus d'Oci</span>
-                    </div>
+                    <div class="flex items-center gap-2"><i class="fas fa-list text-cyan-300"></i> <span id="txt-filter-type">Tipus d'Oci</span></div>
                     <i class="fas fa-chevron-down text-[10px]"></i>
                 </div>
                 <div class="options-menu !w-full" id="typeMenu" style="left:0;"></div>
             </div>
-
             <div class="custom-select flex-1" id="comarcaSelect">
                 <div class="bg-[#1e5d8a] select-trigger !py-4 !rounded-2xl shadow-xl active:scale-95" onclick="toggleMenu('comarcaMenu')">
-                    <div class="flex items-center gap-2">
-                        <i class="fas fa-map-marker-alt text-cyan-300"></i> <span id="txt-filter-comarca">Comarca</span>
-                    </div>
+                    <div class="flex items-center gap-2"><i class="fas fa-map-marker-alt text-cyan-300"></i> <span id="txt-filter-comarca">Comarca</span></div>
                     <i class="fas fa-chevron-down text-[10px]"></i>
                 </div>
                 <div class="options-menu !w-full" id="comarcaMenu" style="left:0;"></div>
             </div>
         </div>
-
         <h2 id="txt-events-title" class="text-white text-2xl font-bold mb-5 ml-1">Esdeveniments Propers</h2>
         <div id="events-grid" class="grid grid-cols-2 gap-4 mb-10"></div>
     </div>
@@ -134,35 +75,30 @@
         <div class="relative w-full h-[35vh] bg-black flex items-center justify-center overflow-hidden">
             <img id="img-det-bg" src="" class="absolute inset-0 w-full h-full object-cover blur-2xl opacity-40 scale-110">
             <img id="img-det" src="" class="relative z-10 h-full w-auto object-contain">
-            <div class="absolute inset-0 z-15 bg-gradient-to-t from-[#1e293b] via-transparent to-transparent"></div>
             <button onclick="cerrarDetalle()" class="absolute top-6 left-5 z-20 bg-black/30 backdrop-blur-md w-10 h-10 rounded-full text-white flex items-center justify-center border border-white/20"><i class="fas fa-arrow-left"></i></button>
             <button onclick="compartirEvento()" class="absolute top-6 right-5 z-20 bg-black/30 backdrop-blur-md w-10 h-10 rounded-full text-white flex items-center justify-center border border-white/20"><i class="fas fa-share-nodes"></i></button>
         </div>
-
         <div class="p-6 relative -mt-4 z-20">
             <h2 id="titulo-det" class="text-4xl font-black text-white leading-tight mb-6"></h2>
             <div class="grid grid-cols-4 gap-1.5 mb-6">
-                <div class="bg-slate-800/80 p-2 rounded-xl border border-slate-600 text-center shadow-lg"><p class="text-[9px] font-black text-slate-400 uppercase mb-1 lbl-place">Lloc</p><p id="lugar-det" class="text-[12px] font-black text-cyan-400 leading-tight"></p></div>
-                <div class="bg-slate-800/80 p-2 rounded-xl border border-slate-600 text-center shadow-lg"><p class="text-[9px] font-black text-slate-400 uppercase mb-1 lbl-date">Data</p><p id="fecha-det" class="text-[12px] font-black text-purple-400 leading-tight"></p></div>
-                <div class="bg-slate-800/80 p-2 rounded-xl border border-slate-600 text-center shadow-lg"><p class="text-[9px] font-black text-slate-400 uppercase mb-1 lbl-time">Hora</p><p id="hora-det" class="text-[12px] font-black text-emerald-400 leading-tight"></p></div>
-                <div class="bg-slate-800/80 p-2 rounded-xl border border-slate-600 text-center shadow-lg"><p class="text-[9px] font-black text-slate-400 uppercase mb-1 lbl-price">Preu</p><p id="precio-det" class="text-[12px] font-black text-orange-400 uppercase leading-tight"></p></div>
+                <div class="bg-slate-800/80 p-2 rounded-xl border border-slate-600 text-center"><p class="text-[9px] font-black text-slate-400 uppercase mb-1 lbl-place">Lloc</p><p id="lugar-det" class="text-[12px] font-black text-cyan-400"></p></div>
+                <div class="bg-slate-800/80 p-2 rounded-xl border border-slate-600 text-center"><p class="text-[9px] font-black text-slate-400 uppercase mb-1 lbl-date">Data</p><p id="fecha-det" class="text-[12px] font-black text-purple-400"></p></div>
+                <div class="bg-slate-800/80 p-2 rounded-xl border border-slate-600 text-center"><p class="text-[9px] font-black text-slate-400 uppercase mb-1 lbl-time">Hora</p><p id="hora-det" class="text-[12px] font-black text-emerald-400"></p></div>
+                <div class="bg-slate-800/80 p-2 rounded-xl border border-slate-600 text-center"><p class="text-[9px] font-black text-slate-400 uppercase mb-1 lbl-price">Preu</p><p id="precio-det" class="text-[12px] font-black text-orange-400"></p></div>
             </div>
-            
             <div class="bg-slate-800/30 p-5 rounded-2xl border border-slate-700/50 mb-6"><p id="desc-det" class="text-slate-200 text-base leading-relaxed font-medium"></p></div>
-            
             <div class="flex items-center gap-3 mb-10">
-                <div id="seccion-direccion" class="flex-1 bg-slate-800/50 p-3 rounded-xl border border-slate-700/50 flex items-center gap-3 cursor-pointer active:bg-slate-700 transition-colors" onclick="abrirMapa()">
-                    <div class="w-10 h-10 bg-cyan-500/20 rounded-lg flex items-center justify-center text-cyan-400 shrink-0"><i class="fas fa-map-location-dot text-lg"></i></div>
-                    <div class="overflow-hidden"><p class="text-[9px] font-black text-slate-400 uppercase mb-0.5">Ubicació</p><p id="direccion-det" class="text-white font-bold text-xs truncate"></p></div>
+                <div id="seccion-direccion" class="flex-1 bg-slate-800/50 p-3 rounded-xl border border-slate-700/50 flex items-center gap-3 cursor-pointer" onclick="abrirMapa()">
+                    <div class="w-10 h-10 bg-cyan-500/20 rounded-lg flex items-center justify-center text-cyan-400"><i class="fas fa-map-location-dot"></i></div>
+                    <div class="overflow-hidden"><p class="text-[9px] font-black text-slate-400 uppercase">Ubicació</p><p id="direccion-det" class="text-white font-bold text-xs truncate"></p></div>
                 </div>
-                <button id="btn-reserve" onclick="irAReserva()" class="bg-cyan-500 text-white px-6 py-4 rounded-xl font-black text-xs shadow-lg shadow-cyan-500/30 active:scale-95 uppercase whitespace-nowrap">RESERVAR</button>
+                <button id="btn-reserve" onclick="irAReserva()" class="bg-cyan-500 text-white px-6 py-4 rounded-xl font-black text-xs shadow-lg active:scale-95">RESERVAR</button>
             </div>
         </div>
     </div>
 
     <script>
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwxJoxAGAkRVvGlTQ5OQBrWc_aq15uCXjH14y5G0CmtIx_NJgCAJlUM9eeiGwFOgXBx/exec";
-        
         let currentLang = 'ca', currentCategory = 'all', currentComarca = 'all', eventData = [], currentTicketUrl = "", currentEvent = null;
 
         const translations = {
@@ -189,11 +125,7 @@
 
         async function loadData() {
             document.getElementById('loading-overlay').style.display = 'flex';
-            try {
-                const response = await fetch(SCRIPT_URL);
-                eventData = await response.json();
-                renderEvents(); renderCategories(); renderComarcas();
-            } catch (e) { console.error("Error", e); }
+            try { const response = await fetch(SCRIPT_URL); eventData = await response.json(); renderEvents(); renderCategories(); renderComarcas(); } catch (e) { console.error("Error", e); }
             document.getElementById('loading-overlay').style.display = 'none';
         }
 
@@ -224,7 +156,6 @@
             document.getElementById('fecha-det').innerText = f;
             let h = ev.Hora ? ev.Hora.toString() : "";
             if (h.includes('T')) h = h.split('T')[1].substring(0, 5);
-            else if (h.length > 5 && h.includes(':')) h = h.substring(0, 5);
             document.getElementById('hora-det').innerText = h || "--:--";
             let p = ev.Precio ? ev.Precio.toString() : "";
             if (p && !p.includes('€') && !isNaN(parseFloat(p))) p += ' €';
@@ -236,41 +167,6 @@
             currentTicketUrl = ev.Link_Entradas;
             document.getElementById('btn-reserve').style.display = (currentTicketUrl && currentTicketUrl.length > 5) ? "block" : "none";
             document.getElementById('pantalla-detalle').classList.remove('hidden');
-        }
-
-        function filterCat(c) { 
-            currentCategory = c; 
-            document.getElementById('txt-filter-type').innerText = (c === 'all') ? translations[currentLang].filterType : categoryNames[c][currentLang];
-            document.getElementById('typeMenu').classList.remove('show'); 
-            renderEvents(); 
-        }
-
-        function filterCom(c) { 
-            currentComarca = c; 
-            document.getElementById('txt-filter-comarca').innerText = (c === 'all') ? translations[currentLang].comarca : c;
-            document.getElementById('comarcaMenu').classList.remove('show'); 
-            renderEvents(); 
-        }
-
-        function renderCategories() {
-            const menu = document.getElementById('typeMenu');
-            let h = `<div class="option-item" onclick="filterCat('all')"><i class="fas fa-th-large opacity-40"></i> ${translations[currentLang].all}</div>`;
-            for (let k in categoryNames) {
-                h += `<div class="option-item" onclick="filterCat('${k}')">
-                        <i class="fas ${categoryNames[k].icon}" style="color:${categoryNames[k].color}"></i> ${categoryNames[k][currentLang]}
-                      </div>`;
-            }
-            menu.innerHTML = h;
-        }
-
-        function renderComarcas() {
-            const menu = document.getElementById('comarcaMenu');
-            let h = `<div class="option-item" onclick="filterCom('all')"><i class="fas fa-map opacity-40"></i> ${translations[currentLang].all}</div>`;
-            comarcas.forEach(c => {
-                const escapedC = c.replace(/'/g, "\\'");
-                h += `<div class="option-item" onclick="filterCom('${escapedC}')">${c}</div>`;
-            });
-            menu.innerHTML = h;
         }
 
         function selectLang(l, f, lbl) {
@@ -295,34 +191,29 @@
             if(!isVisible) m.classList.add('show'); 
         }
 
-        function abrirMapa() {
-            if (currentEvent) {
-                const query = encodeURIComponent(`${currentEvent.Direccion || ''} ${currentEvent.Municipio}, Girona`);
-                window.open('https://www.google.com/maps/search/?api=1&query=' + query, '_blank');
-            }
+        function filterCat(c) { currentCategory = c; document.getElementById('txt-filter-type').innerText = (c === 'all') ? translations[currentLang].filterType : categoryNames[c][currentLang]; toggleMenu('typeMenu'); renderEvents(); }
+        function filterCom(c) { currentComarca = c; document.getElementById('txt-filter-comarca').innerText = (c === 'all') ? translations[currentLang].comarca : c; toggleMenu('comarcaMenu'); renderEvents(); }
+
+        function renderCategories() {
+            const menu = document.getElementById('typeMenu');
+            let h = `<div class="option-item" onclick="filterCat('all')"><i class="fas fa-th-large opacity-40"></i> ${translations[currentLang].all}</div>`;
+            for (let k in categoryNames) { h += `<div class="option-item" onclick="filterCat('${k}')"><i class="fas ${categoryNames[k].icon}" style="color:${categoryNames[k].color}"></i> ${categoryNames[k][currentLang]}</div>`; }
+            menu.innerHTML = h;
         }
 
-        function compartirEvento() {
-            if (navigator.share && currentEvent) {
-                navigator.share({
-                    title: currentEvent['Titulo_'+currentLang.toUpperCase()] || currentEvent.Titulo_CA,
-                    text: `Mira aquest esdeveniment a GirOci: ${currentEvent.Municipio}`,
-                    url: window.location.href
-                }).catch(console.error);
-            }
+        function renderComarcas() {
+            const menu = document.getElementById('comarcaMenu');
+            let h = `<div class="option-item" onclick="filterCom('all')"><i class="fas fa-map opacity-40"></i> ${translations[currentLang].all}</div>`;
+            comarcas.forEach(c => { h += `<div class="option-item" onclick="filterCom('${c}')">${c}</div>`; });
+            menu.innerHTML = h;
         }
 
+        function abrirMapa() { if (currentEvent) { window.open('https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(`${currentEvent.Direccion || ''} ${currentEvent.Municipio}, Girona`), '_blank'); } }
+        function compartirEvento() { if (navigator.share && currentEvent) { navigator.share({ title: currentEvent['Titulo_'+currentLang.toUpperCase()] || currentEvent.Titulo_CA, text: `Mira aquest esdeveniment a GirOci: ${currentEvent.Municipio}`, url: window.location.href }).catch(console.error); } }
         function cerrarDetalle() { document.getElementById('pantalla-detalle').classList.add('hidden'); }
         function irAReserva() { if(currentTicketUrl) window.open(currentTicketUrl, '_blank'); }
-        function entrarApp() { 
-            document.getElementById('splash-screen').style.opacity = '0'; 
-            setTimeout(() => { 
-                document.getElementById('splash-screen').style.display = 'none'; 
-                document.getElementById('main-content').style.display = 'block'; 
-                setTimeout(() => document.getElementById('main-content').style.opacity = '1', 50); 
-                loadData(); 
-            }, 600); 
-        }
+        function entrarApp() { document.getElementById('splash-screen').style.opacity = '0'; setTimeout(() => { document.getElementById('splash-screen').style.display = 'none'; document.getElementById('main-content').style.display = 'block'; setTimeout(() => document.getElementById('main-content').style.opacity = '1', 50); loadData(); }, 600); }
     </script>
 </body>
 </html>
+
