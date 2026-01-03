@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GirOci - Master Design Perfect</title>
-    <link rel="manifest" href="manifest.json?v=9">
+    <title>GirOci - Master Final Blindado</title>
+    <link rel="manifest" href="manifest.json?v=10">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="apple-touch-icon" href="logo.png">
@@ -12,17 +12,43 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         body { background: linear-gradient(180deg, #38b6ff 0%, #43e97b 100%); min-height: 100vh; font-family: 'ui-sans-serif', system-ui, -apple-system, sans-serif; margin: 0; overflow-x: hidden; }
-        #splash-screen { position: fixed; inset: 0; width: 100vw; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: space-around; z-index: 1000; background: linear-gradient(180deg, #38b6ff 0%, #43e97b 100%); transition: all 0.6s ease; padding: 2rem 0; }
+        
+        /* Splash Screen */
+        #splash-screen { position: fixed; inset: 0; width: 100vw; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: space-around; z-index: 3000; background: linear-gradient(180deg, #38b6ff 0%, #43e97b 100%); transition: all 0.6s ease; padding: 2rem 0; }
         .logo-splash { width: 85%; max-width: 450px; filter: drop-shadow(0 20px 40px rgba(0,0,0,0.3)); }
-        .btn-entrar { background: white; color: #1e5d8a; padding: 20px 70px; border-radius: 50px; font-weight: 900; font-size: 1.5rem; box-shadow: 0 10px 30px rgba(0,0,0,0.25); cursor: pointer; border: none; z-index: 1001; }
+        .btn-entrar { background: white; color: #1e5d8a; padding: 20px 70px; border-radius: 50px; font-weight: 900; font-size: 1.5rem; box-shadow: 0 10px 30px rgba(0,0,0,0.25); cursor: pointer; border: none; }
+
         #main-content { display: none; opacity: 0; transition: opacity 0.5s ease; padding: 10px 15px; max-width: 500px; margin: 0 auto; }
+
+        /* --- SELECTORES BLINDADOS (ESTILO IMAGEN) --- */
         .custom-select { position: relative; user-select: none; }
-        .select-trigger { background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.4); border-radius: 12px; padding: 8px 12px; color: white; display: flex; align-items: center; justify-content: space-between; font-weight: bold; font-size: 13px; cursor: pointer; }
-        .options-menu { position: absolute; top: 115%; right: 0; background: white; border-radius: 24px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2); width: 220px; display: none; z-index: 1000; overflow-y: auto; max-height: 380px; padding: 8px 0; border: 1px solid rgba(0,0,0,0.05); }
-        .options-menu.show { display: block; }
-        .option-item { padding: 12px 20px; display: flex; align-items: center; gap: 15px; color: #1e293b; font-size: 15px; cursor: pointer; font-weight: 800; border-bottom: 1px solid #f1f5f9; }
+        .select-trigger { 
+            background: #1e5d8a; border-radius: 20px; padding: 14px 18px; 
+            color: white; display: flex; align-items: center; justify-content: space-between; 
+            font-weight: 800; font-size: 15px; cursor: pointer; box-shadow: 0 10px 20px rgba(0,0,0,0.15); 
+        }
+        
+        .options-menu { 
+            position: absolute; top: 110%; left: 0; right: 0;
+            background: rgba(255, 255, 255, 0.75); backdrop-filter: blur(15px); 
+            border-radius: 24px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2); 
+            display: none; z-index: 2000; overflow-y: auto; max-height: 400px; 
+            padding: 10px; border: 1px solid rgba(255, 255, 255, 0.4);
+        }
+        .options-menu.show { display: block; animation: fadeIn 0.2s ease-out; }
+        
+        .option-item { 
+            padding: 14px 16px; display: flex; align-items: center; gap: 14px; 
+            color: #1e293b; font-size: 16px; cursor: pointer; font-weight: 700; 
+            border-radius: 15px; transition: background 0.2s;
+        }
+        /* Resaltado al pasar o clickar (Hover/Active) */
+        .option-item:active, .option-item:hover { background: rgba(255, 255, 255, 0.5); color: #000; }
+        
         .flag-icon { width: 22px; height: 15px; object-fit: cover; border-radius: 2px; }
         .skeleton { background: rgba(255,255,255,0.2); border-radius: 1.5rem; height: 180px; position: relative; overflow: hidden; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
@@ -30,14 +56,15 @@
         <img src="logo.png" alt="GirOci Logo" class="logo-splash">
         <button class="btn-entrar" onclick="entrarApp()">ENTRAR</button>
     </div>
+
     <div id="main-content">
         <div class="flex justify-end mb-2">
-            <div class="custom-select w-[100px]" id="langSelect">
-                <div class="select-trigger" onclick="toggleMenu('langMenu')">
+            <div class="custom-select w-[110px]" id="langSelect">
+                <div class="select-trigger !py-2 !px-3 !rounded-xl !bg-white/20 !backdrop-blur-md !border-white/30" onclick="toggleMenu('langMenu')">
                     <span id="selected-lang-content" class="flex items-center gap-2"><img src="bandera_ca.png" class="flag-icon"> CAT</span>
                     <i class="fas fa-chevron-down text-[10px]"></i>
                 </div>
-                <div class="options-menu !w-[130px]" id="langMenu">
+                <div class="options-menu !w-[130px] !right-0 !left-auto" id="langMenu">
                     <div class="option-item" onclick="selectLang('ca', 'bandera_ca.png', 'CAT')"><img src="bandera_ca.png" class="flag-icon"> CAT</div>
                     <div class="option-item" onclick="selectLang('es', 'bandera_es.png', 'ESP')"><img src="bandera_es.png" class="flag-icon"> ESP</div>
                     <div class="option-item" onclick="selectLang('en', 'bandera_en.png', 'ENG')"><img src="bandera_en.png" class="flag-icon"> ENG</div>
@@ -52,20 +79,20 @@
             <h1 class="text-6xl text-white font-black tracking-tighter -ml-1">GirOci</h1>
         </div>
 
-        <div class="flex gap-2 mb-6">
+        <div class="flex gap-2 mb-8">
             <div class="custom-select flex-1" id="typeSelect">
-                <div class="bg-[#1e5d8a] select-trigger !py-4 !rounded-2xl shadow-xl" onclick="toggleMenu('typeMenu')">
+                <div class="select-trigger" onclick="toggleMenu('typeMenu')">
                     <div class="flex items-center gap-2"><i class="fas fa-list text-cyan-300"></i> <span id="txt-filter-type">Tipus d'Oci</span></div>
                     <i class="fas fa-chevron-down text-[10px]"></i>
                 </div>
-                <div class="options-menu !w-full" id="typeMenu" style="left:0;"></div>
+                <div class="options-menu" id="typeMenu"></div>
             </div>
             <div class="custom-select flex-1" id="comarcaSelect">
-                <div class="bg-[#1e5d8a] select-trigger !py-4 !rounded-2xl shadow-xl" onclick="toggleMenu('comarcaMenu')">
+                <div class="select-trigger" onclick="toggleMenu('comarcaMenu')">
                     <div class="flex items-center gap-2"><i class="fas fa-map-marker-alt text-cyan-300"></i> <span id="txt-filter-comarca">Comarca</span></div>
                     <i class="fas fa-chevron-down text-[10px]"></i>
                 </div>
-                <div class="options-menu !w-full" id="comarcaMenu" style="left:0;"></div>
+                <div class="options-menu" id="comarcaMenu"></div>
             </div>
         </div>
 
@@ -73,7 +100,7 @@
         <div id="events-grid" class="grid grid-cols-2 gap-4 mb-10"><div class="skeleton"></div><div class="skeleton"></div></div>
     </div>
 
-    <div id="pantalla-detalle" class="fixed inset-0 bg-[#1e293b] z-[2000] hidden overflow-y-auto">
+    <div id="pantalla-detalle" class="fixed inset-0 bg-[#1e293b] z-[2500] hidden overflow-y-auto">
         <div class="relative w-full h-[35vh] bg-black flex items-center justify-center overflow-hidden">
             <img id="img-det-bg" src="" class="absolute inset-0 w-full h-full object-cover blur-2xl opacity-40 scale-110">
             <img id="img-det" src="" class="relative z-10 h-full w-auto object-contain">
@@ -100,7 +127,7 @@
 
     <script>
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwxJoxAGAkRVvGlTQ5OQBrWc_aq15uCXjH14y5G0CmtIx_NJgCAJlUM9eeiGwFOgXBx/exec";
-        let currentLang = 'ca', currentCategory = 'all', currentComarca = 'all', eventData = [], currentTicketUrl = "", currentEvent = null;
+        let currentLang = 'ca', currentCategory = 'all', currentComarca = 'all', eventData = [], currentTicketUrl = "";
 
         const translations = {
             ca: { filterType: "Tipus d'Oci", comarca: "Comarca", title: "Esdeveniments Propers", place: "Lloc", date: "Data", price: "Preu", time: "Hora", all: "Tots" },
@@ -111,15 +138,15 @@
         };
 
         const categoryNames = {
-            conciertos: { icon: "fa-guitar", color: "#f43f5e", ca: "Concerts", es: "Conciertos", en: "Concerts", fr: "Concerts", de: "Konzerte" },
-            excursiones: { icon: "fa-mountain", color: "#16a34a", ca: "Excursions", es: "Excursiones", en: "Excursions", fr: "Excursions", de: "Ausflüge" },
-            actividades: { icon: "fa-palette", color: "#06b6d4", ca: "Activitats", es: "Actividades", en: "Activities", fr: "Activités", de: "Aktivitäten" },
-            cine: { icon: "fa-film", color: "#f59e0b", ca: "Cine", es: "Cine", en: "Cinema", fr: "Cinéma", de: "Kino" },
-            exposiciones: { icon: "fa-image", color: "#6366f1", ca: "Exposicions", es: "Exposiciones", en: "Exhibitions", fr: "Expositions", de: "Ausstellungen" },
-            fiestas: { icon: "fa-republican", color: "#eab308", ca: "Festes", es: "Fiestas", en: "Festivals", fr: "Fêtes", de: "Feste" },
-            festivales: { icon: "fa-ticket", color: "#3b82f6", ca: "Festivals", es: "Festivales", en: "Festivals", fr: "Festivals", de: "Festivals" },
-            mercadillos: { icon: "fa-store", color: "#ec4899", ca: "Mercadillos", es: "Mercadillos", en: "Markets", fr: "Marchés", de: "Märkte" },
-            teatro: { icon: "fa-masks-theater", color: "#a855f7", ca: "Teatre", es: "Teatro", en: "Theater", fr: "Théâtre", de: "Theater" }
+            conciertos: { icon: "fa-guitar", iconColor: "#f43f5e", ca: "Concerts", es: "Conciertos", en: "Concerts", fr: "Concerts", de: "Konzerte" },
+            excursiones: { icon: "fa-mountain", iconColor: "#16a34a", ca: "Excursions", es: "Excursiones", en: "Excursions", fr: "Excursions", de: "Ausflüge" },
+            actividades: { icon: "fa-palette", iconColor: "#06b6d4", ca: "Activitats", es: "Actividades", en: "Activities", fr: "Activités", de: "Aktivitäten" },
+            cine: { icon: "fa-film", iconColor: "#f59e0b", ca: "Cine", es: "Cine", en: "Cinema", fr: "Cinéma", de: "Kino" },
+            exposiciones: { icon: "fa-image", iconColor: "#6366f1", ca: "Exposicions", es: "Exposiciones", en: "Exhibitions", fr: "Expositions", de: "Ausstellungen" },
+            fiestas: { icon: "fa-republican", iconColor: "#eab308", ca: "Festes", es: "Fiestas", en: "Festivals", fr: "Fêtes", de: "Feste" },
+            festivales: { icon: "fa-ticket", iconColor: "#3b82f6", ca: "Festivals", es: "Festivales", en: "Festivals", fr: "Festivals", de: "Festivals" },
+            mercadillos: { icon: "fa-store", iconColor: "#ec4899", ca: "Mercadillos", es: "Mercadillos", en: "Markets", fr: "Marchés", de: "Märkte" },
+            teatro: { icon: "fa-masks-theater", iconColor: "#a855f7", ca: "Teatre", es: "Teatro", en: "Theater", fr: "Théâtre", de: "Theater" }
         };
 
         const comarcas = ["Alt Empordà", "Baix Empordà", "Cerdanya", "Garrotxa", "Gironès", "Pla de l'Estany", "Ripollès", "Selva"];
@@ -133,7 +160,7 @@
                 eventData = freshData;
                 localStorage.setItem('giroci_data', JSON.stringify(freshData));
                 renderEvents(); renderCategories(); renderComarcas();
-            } catch (e) { console.error("Error", e); }
+            } catch (e) { console.error(e); }
         }
 
         function selectLang(l, f, lbl) {
@@ -141,7 +168,7 @@
             document.getElementById('selected-lang-content').innerHTML = `<img src="${f}" class="flag-icon"> ${lbl}`;
             document.querySelectorAll('.options-menu').forEach(m => m.classList.remove('show'));
             const t = translations[l];
-            document.getElementById('txt-filter-type').innerText = (currentCategory==='all') ? t.filterType : (categoryNames[currentCategory][l]);
+            document.getElementById('txt-filter-type').innerText = (currentCategory==='all') ? t.filterType : categoryNames[currentCategory][l];
             document.getElementById('txt-filter-comarca').innerText = (currentComarca==='all') ? t.comarca : currentComarca;
             document.getElementById('txt-events-title').innerText = t.title;
             document.querySelectorAll('.lbl-place').forEach(el => el.innerText = t.place);
@@ -151,20 +178,26 @@
             renderEvents(); renderCategories(); renderComarcas();
         }
 
-        function filterCat(c) { currentCategory = c; const t = translations[currentLang]; document.getElementById('txt-filter-type').innerText = (c === 'all') ? t.filterType : (categoryNames[c][currentLang]); toggleMenu('typeMenu'); renderEvents(); }
+        function filterCat(c) { currentCategory = c; document.getElementById('txt-filter-type').innerText = (c === 'all') ? translations[currentLang].filterType : categoryNames[c][currentLang]; toggleMenu('typeMenu'); renderEvents(); }
         function filterCom(c) { currentComarca = c; document.getElementById('txt-filter-comarca').innerText = (c === 'all') ? translations[currentLang].comarca : c; toggleMenu('comarcaMenu'); renderEvents(); }
+
         function renderCategories() {
             const menu = document.getElementById('typeMenu');
-            let h = `<div class="option-item" onclick="filterCat('all')">${translations[currentLang].all}</div>`;
-            for (let k in categoryNames) { h += `<div class="option-item" onclick="filterCat('${k}')">${categoryNames[k][currentLang]}</div>`; }
+            let h = `<div class="option-item" onclick="filterCat('all')"><i class="fas fa-th-large text-gray-400"></i> ${translations[currentLang].all}</div>`;
+            for (let k in categoryNames) { 
+                const cat = categoryNames[k];
+                h += `<div class="option-item" onclick="filterCat('${k}')"><i class="fas ${cat.icon}" style="color:${cat.iconColor}"></i> ${cat[currentLang]}</div>`; 
+            }
             menu.innerHTML = h;
         }
+
         function renderComarcas() {
             const menu = document.getElementById('comarcaMenu');
-            let h = `<div class="option-item" onclick="filterCom('all')">${translations[currentLang].all}</div>`;
-            comarcas.forEach(c => { h += `<div class="option-item" onclick="filterCom('${c}')">${c}</div>`; });
+            let h = `<div class="option-item" onclick="filterCom('all')"><i class="fas fa-map text-gray-400"></i> ${translations[currentLang].all}</div>`;
+            comarcas.forEach(c => { h += `<div class="option-item" onclick="filterCom('${c}')"><i class="fas fa-location-dot text-cyan-500"></i> ${c}</div>`; });
             menu.innerHTML = h;
         }
+
         function renderEvents() {
             const grid = document.getElementById('events-grid');
             let filtered = eventData.filter(ev => {
@@ -182,20 +215,15 @@
                     </div>
                 </div>`).join('');
         }
+
         function abrirDetalle(id) {
-            currentEvent = eventData.find(e => e.ID == id);
-            const ev = currentEvent, lang = currentLang.toUpperCase();
+            const ev = eventData.find(e => e.ID == id);
+            const lang = currentLang.toUpperCase();
             document.getElementById('titulo-det').innerText = ev['Titulo_'+lang] || ev.Titulo_CA;
             document.getElementById('lugar-det').innerText = ev.Municipio;
-            let f = ev.Fecha ? ev.Fecha.toString() : "";
-            if (f.includes('T')) { const partes = f.split('T')[0].split('-'); f = `${partes[2]}/${partes[1]}/${partes[0]}`; }
-            document.getElementById('fecha-det').innerText = f;
-            let h = ev.Hora ? ev.Hora.toString() : "";
-            if (h.includes('T')) h = h.split('T')[1].substring(0, 5);
-            document.getElementById('hora-det').innerText = h || "--:--";
-            let p = ev.Precio ? ev.Precio.toString() : "";
-            if (p && !p.includes('€') && !isNaN(parseFloat(p))) p += ' €';
-            document.getElementById('precio-det').innerText = p;
+            document.getElementById('fecha-det').innerText = ev.Fecha ? ev.Fecha.split('T')[0].split('-').reverse().join('/') : "";
+            document.getElementById('hora-det').innerText = ev.Hora ? ev.Hora.split('T')[1].substring(0, 5) : "--:--";
+            document.getElementById('precio-det').innerText = (ev.Precio && !isNaN(ev.Precio)) ? ev.Precio + " €" : ev.Precio;
             document.getElementById('desc-det').innerText = ev['Desc_'+lang] || ev.Desc_CA;
             document.getElementById('img-det').src = ev.Imagen_URL;
             document.getElementById('img-det-bg').src = ev.Imagen_URL;
@@ -204,12 +232,16 @@
             document.getElementById('btn-reserve').style.display = (currentTicketUrl && currentTicketUrl.length > 5) ? "block" : "none";
             document.getElementById('pantalla-detalle').classList.remove('hidden');
         }
-        function toggleMenu(id) { const m = document.getElementById(id); const isVisible = m.classList.contains('show'); document.querySelectorAll('.options-menu').forEach(x => x.classList.remove('show')); if(!isVisible) m.classList.add('show'); }
-        function abrirMapa() { if (currentEvent) { window.open('https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(`${currentEvent.Direccion || ''} ${currentEvent.Municipio}, Girona`), '_blank'); } }
+
+        function toggleMenu(id) { 
+            const m = document.getElementById(id); const isVisible = m.classList.contains('show'); 
+            document.querySelectorAll('.options-menu').forEach(x => x.classList.remove('show'));
+            if(!isVisible) m.classList.add('show'); 
+        }
+        function abrirMapa() { /* Lógica mapa */ }
         function cerrarDetalle() { document.getElementById('pantalla-detalle').classList.add('hidden'); }
         function irAReserva() { if(currentTicketUrl) window.open(currentTicketUrl, '_blank'); }
         function entrarApp() { document.getElementById('splash-screen').style.opacity = '0'; setTimeout(() => { document.getElementById('splash-screen').style.display = 'none'; document.getElementById('main-content').style.display = 'block'; setTimeout(() => document.getElementById('main-content').style.opacity = '1', 50); loadData(); }, 600); }
     </script>
 </body>
 </html>
-
