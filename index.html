@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>GirOci - Master Final Blindado</title>
-    <link rel="manifest" href="manifest.json?v=10">
+    <link rel="manifest" href="manifest.json?v=12">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="apple-touch-icon" href="logo.png">
@@ -57,7 +57,11 @@
     </div>
 
     <div id="main-content">
-        <div class="flex justify-end mb-2">
+        <div class="flex justify-between items-center mb-2 px-1">
+            <button onclick="compartirApp()" class="w-10 h-10 bg-white/20 backdrop-blur-md rounded-xl border border-white/30 text-white flex items-center justify-center active:scale-90 transition-all shadow-lg">
+                <i class="fas fa-share-nodes"></i>
+            </button>
+
             <div class="custom-select w-[110px]" id="langSelect">
                 <div class="select-trigger !py-2 !px-3 !rounded-xl !bg-white/20 !backdrop-blur-md !border-white/30" onclick="toggleMenu('langMenu')">
                     <span id="selected-lang-content" class="flex items-center gap-2"><img src="bandera_ca.png" class="flag-icon"> CAT</span>
@@ -104,7 +108,6 @@
             <img id="img-det-bg" src="" class="absolute inset-0 w-full h-full object-cover blur-2xl opacity-40 scale-110">
             <img id="img-det" src="" class="relative z-10 h-full w-auto object-contain">
             <button onclick="cerrarDetalle()" class="absolute top-6 left-5 z-20 bg-black/30 backdrop-blur-md w-10 h-10 rounded-full text-white flex items-center justify-center border border-white/20"><i class="fas fa-arrow-left"></i></button>
-            
             <button id="btn-like-det" onclick="toggleLikeActual()" class="absolute top-6 right-5 z-20 bg-white/20 backdrop-blur-md w-12 h-12 rounded-full text-white flex items-center justify-center border border-white/30 text-xl transition-all active:scale-125">
                 <i class="fa-heart"></i>
             </button>
@@ -132,15 +135,14 @@
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwxJoxAGAkRVvGlTQ5OQBrWc_aq15uCXjH14y5G0CmtIx_NJgCAJlUM9eeiGwFOgXBx/exec";
         let currentLang = 'ca', currentCategory = 'all', currentComarca = 'all', eventData = [], currentTicketUrl = "", currentIdDetalle = null;
         
-        // Memoria de Likes
         let myLikes = JSON.parse(localStorage.getItem('giroci_likes') || "[]");
 
         const translations = {
-            ca: { filterType: "Tipus d'Oci", comarca: "Comarca", title: "Esdeveniments Propers", place: "Lloc", date: "Data", price: "Preu", time: "Hora", all: "Tots" },
-            es: { filterType: "Tipo de Ocio", comarca: "Comarca", title: "Próximos Eventos", place: "Lugar", date: "Fecha", price: "Precio", time: "Hora", all: "Todos" },
-            en: { filterType: "Leisure Type", comarca: "County", title: "Upcoming Events", place: "Location", date: "Date", price: "Price", time: "Time", all: "All" },
-            fr: { filterType: "Loisirs", comarca: "Arrondissement", title: "Prochains Événements", place: "Lieu", date: "Date", price: "Prix", time: "Heure", all: "Tous" },
-            de: { filterType: "Freizeit", comarca: "Landkreis", title: "Kommende Events", place: "Ort", date: "Datum", price: "Preis", time: "Zeit", all: "Alle" }
+            ca: { filterType: "Tipus d'Oci", comarca: "Comarca", title: "Esdeveniments Propers", place: "Lloc", date: "Data", price: "Preu", time: "Hora", all: "Tots", share: "Mira aquesta App d'oci a Girona: " },
+            es: { filterType: "Tipo de Ocio", comarca: "Comarca", title: "Próximos Eventos", place: "Lugar", date: "Fecha", price: "Precio", time: "Hora", all: "Todos", share: "Mira esta App de ocio en Girona: " },
+            en: { filterType: "Leisure Type", comarca: "County", title: "Upcoming Events", place: "Location", date: "Date", price: "Price", time: "Time", all: "All", share: "Check out this Girona Leisure App: " },
+            fr: { filterType: "Loisirs", comarca: "Arrondissement", title: "Prochains Événements", place: "Lieu", date: "Date", price: "Prix", time: "Heure", all: "Tous", share: "Découvrez cette application de loisirs à Gérone: " },
+            de: { filterType: "Freizeit", comarca: "Landkreis", title: "Kommende Events", place: "Ort", date: "Datum", price: "Preis", time: "Zeit", all: "Alle", share: "Schau dir diese Freizeit-App für Girona an: " }
         };
 
         const categoryNames = {
@@ -157,6 +159,13 @@
         };
 
         const comarcas = ["Alt Empordà", "Baix Empordà", "Cerdanya", "Garrotxa", "Gironès", "Pla de l'Estany", "Ripollès", "Selva"];
+
+        // Función para compartir la App completa
+        function compartirApp() {
+            const msg = translations[currentLang].share;
+            const url = window.location.href.split('?')[0]; 
+            window.open(`https://wa.me/?text=${encodeURIComponent(msg + url)}`, '_blank');
+        }
 
         async function loadData() {
             const cached = localStorage.getItem('giroci_data');
@@ -213,7 +222,6 @@
                 return matchCat && matchCom;
             });
             if(filtered.length === 0 && eventData.length > 0) { grid.innerHTML = `<p class="text-white col-span-2 text-center opacity-60 py-10">No hi ha esdeveniments.</p>`; return; }
-            
             grid.innerHTML = filtered.map(ev => {
                 const isFav = myLikes.includes(String(ev.ID));
                 return `
@@ -232,55 +240,37 @@
             const ev = eventData.find(e => String(e.ID) === String(id));
             if(!ev) return;
             currentIdDetalle = String(id);
-
             const lang = currentLang.toUpperCase();
             document.getElementById('titulo-det').innerText = ev['Titulo_'+lang] || ev.Titulo_CAT || ev.Titulo_CA;
             document.getElementById('lugar-det').innerText = ev.Municipio;
             document.getElementById('fecha-det').innerText = ev.Fecha ? ev.Fecha.split('T')[0].split('-').reverse().join('/') : "";
             document.getElementById('hora-det').innerText = ev.Hora ? ev.Hora.toString().substring(0, 5) : "--:--";
-            
             let p = ev.Precio;
             document.getElementById('precio-det').innerText = (p && !isNaN(p)) ? p + " €" : p;
             document.getElementById('desc-det').innerText = ev['Desc_'+lang] || ev.Desc_CA;
             document.getElementById('img-det').src = ev.Imagen_URL;
             document.getElementById('img-det-bg').src = ev.Imagen_URL;
             document.getElementById('direccion-det').innerText = ev.Direccion || ev.Municipio;
-            
-            // Botón Reserva
             currentTicketUrl = ev.Link_Entradas;
             const btnRes = document.getElementById('btn-reserve');
             btnRes.style.display = (currentTicketUrl && currentTicketUrl.trim() !== "" && String(ev.Precio).toLowerCase() !== "gratis") ? "block" : "none";
-            
-            // Botón Like
             updateLikeVisual();
-            
             document.getElementById('pantalla-detalle').classList.remove('hidden');
         }
 
-        // LÓGICA DE LIKES
         function toggleLikeActual() {
             const idStr = String(currentIdDetalle);
-            if(myLikes.includes(idStr)) {
-                myLikes = myLikes.filter(id => id !== idStr);
-            } else {
-                myLikes.push(idStr);
-            }
+            if(myLikes.includes(idStr)) { myLikes = myLikes.filter(id => id !== idStr); } else { myLikes.push(idStr); }
             localStorage.setItem('giroci_likes', JSON.stringify(myLikes));
             updateLikeVisual();
-            renderEvents(); // Refrescar la pantalla principal
+            renderEvents();
         }
 
         function updateLikeVisual() {
             const isFav = myLikes.includes(String(currentIdDetalle));
             const btn = document.getElementById('btn-like-det');
             const icon = btn.querySelector('i');
-            if(isFav) {
-                icon.className = "fas fa-heart text-red-500";
-                btn.classList.add('bg-white');
-            } else {
-                icon.className = "far fa-heart text-white";
-                btn.classList.remove('bg-white');
-            }
+            if(isFav) { icon.className = "fas fa-heart text-red-500"; btn.classList.add('bg-white'); } else { icon.className = "far fa-heart text-white"; btn.classList.remove('bg-white'); }
         }
 
         function toggleMenu(id) { 
