@@ -104,6 +104,10 @@
             <img id="img-det-bg" src="" class="absolute inset-0 w-full h-full object-cover blur-2xl opacity-40 scale-110">
             <img id="img-det" src="" class="relative z-10 h-full w-auto object-contain">
             <button onclick="cerrarDetalle()" class="absolute top-6 left-5 z-20 bg-black/30 backdrop-blur-md w-10 h-10 rounded-full text-white flex items-center justify-center border border-white/20"><i class="fas fa-arrow-left"></i></button>
+            
+            <button id="btn-like-det" onclick="toggleLikeActual()" class="absolute top-6 right-5 z-20 bg-white/20 backdrop-blur-md w-12 h-12 rounded-full text-white flex items-center justify-center border border-white/30 text-xl transition-all active:scale-125">
+                <i class="fa-heart"></i>
+            </button>
         </div>
         <div class="p-6 relative -mt-4 z-20">
             <h2 id="titulo-det" class="text-3xl font-black text-white leading-tight mb-6"></h2>
@@ -126,7 +130,10 @@
 
     <script>
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwxJoxAGAkRVvGlTQ5OQBrWc_aq15uCXjH14y5G0CmtIx_NJgCAJlUM9eeiGwFOgXBx/exec";
-        let currentLang = 'ca', currentCategory = 'all', currentComarca = 'all', eventData = [], currentTicketUrl = "";
+        let currentLang = 'ca', currentCategory = 'all', currentComarca = 'all', eventData = [], currentTicketUrl = "", currentIdDetalle = null;
+        
+        // Memoria de Likes
+        let myLikes = JSON.parse(localStorage.getItem('giroci_likes') || "[]");
 
         const translations = {
             ca: { filterType: "Tipus d'Oci", comarca: "Comarca", title: "Esdeveniments Propers", place: "Lloc", date: "Data", price: "Preu", time: "Hora", all: "Tots" },
@@ -136,7 +143,6 @@
             de: { filterType: "Freizeit", comarca: "Landkreis", title: "Kommende Events", place: "Ort", date: "Datum", price: "Preis", time: "Zeit", all: "Alle" }
         };
 
-        // ACTUALIZADO: Añadida Gastronomía
         const categoryNames = {
             gastronomia: { icon: "fa-utensils", iconColor: "#ff4d4d", ca: "Gastronomia", es: "Gastronomía", en: "Gastronomy", fr: "Gastronomie", de: "Gastronomie" },
             conciertos: { icon: "fa-guitar", iconColor: "#f43f5e", ca: "Concerts", es: "Conciertos", en: "Concerts", fr: "Concerts", de: "Konzerte" },
@@ -207,19 +213,25 @@
                 return matchCat && matchCom;
             });
             if(filtered.length === 0 && eventData.length > 0) { grid.innerHTML = `<p class="text-white col-span-2 text-center opacity-60 py-10">No hi ha esdeveniments.</p>`; return; }
-            grid.innerHTML = filtered.map(ev => `
-                <div onclick="abrirDetalle('${ev.ID}')" class="bg-white rounded-[1.5rem] overflow-hidden shadow-xl active:scale-95 transition-all cursor-pointer">
+            
+            grid.innerHTML = filtered.map(ev => {
+                const isFav = myLikes.includes(String(ev.ID));
+                return `
+                <div onclick="abrirDetalle('${ev.ID}')" class="bg-white rounded-[1.5rem] overflow-hidden shadow-xl active:scale-95 transition-all cursor-pointer relative">
+                    ${isFav ? '<div class="absolute top-2 right-2 z-10 text-red-500 bg-white/80 w-6 h-6 rounded-full flex items-center justify-center text-[10px] shadow-sm"><i class="fas fa-heart"></i></div>' : ''}
                     <img src="${ev.Imagen_URL}" class="h-32 w-full object-cover" loading="lazy">
                     <div class="p-3">
                         <h3 class="font-bold text-[13px] text-gray-800 leading-tight h-8 overflow-hidden">${ev['Titulo_'+currentLang.toUpperCase()] || ev.Titulo_CAT || ev.Titulo_CA}</h3>
                         <p class="text-[10px] text-gray-400 mt-1 uppercase font-bold">${ev.Municipio}</p>
                     </div>
-                </div>`).join('');
+                </div>`;
+            }).join('');
         }
 
         function abrirDetalle(id) {
             const ev = eventData.find(e => String(e.ID) === String(id));
             if(!ev) return;
+            currentIdDetalle = String(id);
 
             const lang = currentLang.toUpperCase();
             document.getElementById('titulo-det').innerText = ev['Titulo_'+lang] || ev.Titulo_CAT || ev.Titulo_CA;
@@ -227,25 +239,48 @@
             document.getElementById('fecha-det').innerText = ev.Fecha ? ev.Fecha.split('T')[0].split('-').reverse().join('/') : "";
             document.getElementById('hora-det').innerText = ev.Hora ? ev.Hora.toString().substring(0, 5) : "--:--";
             
-            // Tratamiento de precio
             let p = ev.Precio;
             document.getElementById('precio-det').innerText = (p && !isNaN(p)) ? p + " €" : p;
-
             document.getElementById('desc-det').innerText = ev['Desc_'+lang] || ev.Desc_CA;
             document.getElementById('img-det').src = ev.Imagen_URL;
             document.getElementById('img-det-bg').src = ev.Imagen_URL;
             document.getElementById('direccion-det').innerText = ev.Direccion || ev.Municipio;
             
-            // LÓGICA BLINDADA DEL BOTÓN DE RESERVA
+            // Botón Reserva
             currentTicketUrl = ev.Link_Entradas;
-            const btn = document.getElementById('btn-reserve');
-            if (currentTicketUrl && currentTicketUrl.trim() !== "" && String(ev.Precio).toLowerCase() !== "gratis") {
-                btn.style.display = "block";
-            } else {
-                btn.style.display = "none";
-            }
+            const btnRes = document.getElementById('btn-reserve');
+            btnRes.style.display = (currentTicketUrl && currentTicketUrl.trim() !== "" && String(ev.Precio).toLowerCase() !== "gratis") ? "block" : "none";
+            
+            // Botón Like
+            updateLikeVisual();
             
             document.getElementById('pantalla-detalle').classList.remove('hidden');
+        }
+
+        // LÓGICA DE LIKES
+        function toggleLikeActual() {
+            const idStr = String(currentIdDetalle);
+            if(myLikes.includes(idStr)) {
+                myLikes = myLikes.filter(id => id !== idStr);
+            } else {
+                myLikes.push(idStr);
+            }
+            localStorage.setItem('giroci_likes', JSON.stringify(myLikes));
+            updateLikeVisual();
+            renderEvents(); // Refrescar la pantalla principal
+        }
+
+        function updateLikeVisual() {
+            const isFav = myLikes.includes(String(currentIdDetalle));
+            const btn = document.getElementById('btn-like-det');
+            const icon = btn.querySelector('i');
+            if(isFav) {
+                icon.className = "fas fa-heart text-red-500";
+                btn.classList.add('bg-white');
+            } else {
+                icon.className = "far fa-heart text-white";
+                btn.classList.remove('bg-white');
+            }
         }
 
         function toggleMenu(id) { 
@@ -263,4 +298,3 @@
     </script>
 </body>
 </html>
-
