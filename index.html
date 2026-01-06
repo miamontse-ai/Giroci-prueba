@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GirOci - Master Final Blindado</title>
+    <title>GirOci - Master Flow Cine</title>
     <link rel="manifest" href="manifest.json?v=12">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -13,14 +13,12 @@
     <style>
         body { background: linear-gradient(180deg, #38b6ff 0%, #43e97b 100%); min-height: 100vh; font-family: 'ui-sans-serif', system-ui, -apple-system, sans-serif; margin: 0; overflow-x: hidden; }
         
-        /* Splash Screen */
         #splash-screen { position: fixed; inset: 0; width: 100vw; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: space-around; z-index: 3000; background: linear-gradient(180deg, #38b6ff 0%, #43e97b 100%); transition: all 0.6s ease; padding: 2rem 0; }
         .logo-splash { width: 95%; max-width: 550px; filter: drop-shadow(0 20px 40px rgba(0,0,0,0.3)); }
         .btn-entrar { background: white; color: #1e5d8a; padding: 20px 70px; border-radius: 50px; font-weight: 900; font-size: 1.5rem; box-shadow: 0 10px 30px rgba(0,0,0,0.25); cursor: pointer; border: none; }
 
         #main-content { display: none; opacity: 0; transition: opacity 0.5s ease; padding: 10px 15px; max-width: 500px; margin: 0 auto; }
 
-        /* --- SELECTORES BLINDADOS --- */
         .custom-select { position: relative; user-select: none; }
         .select-trigger { 
             background: #1e5d8a; border-radius: 20px; padding: 14px 18px; 
@@ -47,6 +45,10 @@
         .flag-icon { width: 22px; height: 15px; object-fit: cover; border-radius: 2px; }
         .skeleton { background: rgba(255,255,255,0.2); border-radius: 1.5rem; height: 180px; position: relative; overflow: hidden; }
 
+        /* Estilo para los botones de Cine */
+        .cine-card { background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.3); border-radius: 20px; padding: 20px; text-align: center; color: white; font-weight: 800; transition: all 0.3s; }
+        .cine-card:active { transform: scale(0.95); background: rgba(255,255,255,0.3); }
+
         @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
@@ -61,7 +63,6 @@
             <button onclick="compartirApp()" class="w-10 h-10 bg-white/20 backdrop-blur-md rounded-xl border border-white/30 text-white flex items-center justify-center active:scale-90 transition-all shadow-lg">
                 <i class="fas fa-share-nodes"></i>
             </button>
-
             <div class="custom-select w-[110px]" id="langSelect">
                 <div class="select-trigger !py-2 !px-3 !rounded-xl !bg-white/20 !backdrop-blur-md !border-white/30" onclick="toggleMenu('langMenu')">
                     <span id="selected-lang-content" class="flex items-center gap-2"><img src="bandera_ca.png" class="flag-icon"> CAT</span>
@@ -70,16 +71,13 @@
                 <div class="options-menu !w-[130px] !right-0 !left-auto" id="langMenu">
                     <div class="option-item" onclick="selectLang('ca', 'bandera_ca.png', 'CAT')"><img src="bandera_ca.png" class="flag-icon"> CAT</div>
                     <div class="option-item" onclick="selectLang('es', 'bandera_es.png', 'ESP')"><img src="bandera_es.png" class="flag-icon"> ESP</div>
-                    <div class="option-item" onclick="selectLang('en', 'bandera_en.png', 'ENG')"><img src="bandera_en.png" class="flag-icon"> ENG</div>
-                    <div class="option-item" onclick="selectLang('fr', 'bandera_fr.png', 'FRA')"><img src="bandera_fr.png" class="flag-icon"> FRA</div>
-                    <div class="option-item" onclick="selectLang('de', 'bandera_de.png', 'DE')"><img src="bandera_de.png" class="flag-icon"> DE</div>
                 </div>
             </div>
         </div>
 
-        <div id="cine-header" class="hidden mb-2 px-1">
-            <button onclick="activarCartellera()" class="w-10 h-10 bg-white/20 backdrop-blur-md rounded-xl border border-white/30 text-white flex items-center justify-center active:scale-90 transition-all shadow-lg">
-                <i class="fas fa-arrow-left"></i>
+        <div id="cine-header" class="hidden mb-4 px-1">
+            <button onclick="volverAHome()" class="flex items-center gap-2 text-white font-black bg-black/20 px-4 py-2 rounded-xl border border-white/20">
+                <i class="fas fa-arrow-left"></i> <span id="txt-tornar">TORNAR</span>
             </button>
         </div>
 
@@ -88,12 +86,11 @@
             <h1 class="text-6xl text-white font-black tracking-tighter -ml-1">GirOci</h1>
         </div>
 
-        <div class="flex flex-col gap-2 mb-8">
-            <div id="btn-cartellera" class="select-trigger !justify-center gap-3 transition-all duration-300" onclick="activarCartellera()">
-                <i class="fas fa-film text-cyan-300"></i>
+        <div id="filtros-home" class="flex flex-col gap-2 mb-8">
+            <div id="btn-cartellera" class="select-trigger !justify-center gap-3 !bg-emerald-500" onclick="irACartellera()">
+                <i class="fas fa-film text-white"></i>
                 <span id="txt-cartellera">CARTELLERA DE CINE</span>
             </div>
-
             <div class="flex gap-2">
                 <div class="custom-select flex-1" id="typeSelect">
                     <div class="select-trigger" onclick="toggleMenu('typeMenu')">
@@ -111,7 +108,8 @@
         </div>
 
         <h2 id="txt-events-title" class="text-white text-2xl font-bold mb-5 ml-1">Esdeveniments Propers</h2>
-        <div id="events-grid" class="grid grid-cols-2 gap-4 mb-10"><div class="skeleton"></div><div class="skeleton"></div></div>
+        
+        <div id="events-grid" class="grid grid-cols-2 gap-4 mb-10"></div>
     </div>
 
     <div id="pantalla-detalle" class="fixed inset-0 bg-[#1e293b] z-[2500] hidden overflow-y-auto">
@@ -143,234 +141,139 @@
     </div>
 
     <script>
-        // --- CAMBIO CLAVE: LECTURA DE JSON LOCAL ---
-        let currentLang = 'ca', currentCategory = 'all', currentComarca = 'all', eventData = [], cineData = [], currentTicketUrl = "", currentIdDetalle = null, isCartelleraMode = false;
+        let currentLang = 'ca', currentCategory = 'all', currentComarca = 'all', eventData = [], cineData = [], isCartelleraMode = false, selectedCine = null;
         let myLikes = JSON.parse(localStorage.getItem('giroci_likes') || "[]");
 
         const translations = {
-            ca: { filterType: "Tipus d'Oci", comarca: "Comarca", cineType: "Cines", cineLoc: "Ubicació", title: "Esdeveniments Propers", place: "Lloc", date: "Data", price: "Preu", time: "Hora", all: "Tots", share: "Mira aquesta App d'oci a Girona: ", cartellera: "CARTELLERA DE CINE", cineTitle: "Cartellera de Cine" },
-            es: { filterType: "Tipo de Ocio", comarca: "Comarca", cineType: "Cines", cineLoc: "Ubicación", title: "Próximos Eventos", place: "Lugar", date: "Fecha", price: "Precio", time: "Hora", all: "Todos", share: "Mira esta App de ocio en Girona: ", cartellera: "CARTELERA DE CINE", cineTitle: "Cartelera de Cine" },
-            en: { filterType: "Leisure Type", comarca: "County", cineType: "Cinemas", cineLoc: "Location", title: "Upcoming Events", place: "Location", date: "Date", price: "Price", time: "Time", all: "All", share: "Check out this Girona Leisure App: ", cartellera: "CINEMA LISTINGS", cineTitle: "Cinema Listings" },
-            fr: { filterType: "Loisirs", comarca: "Arrondissement", cineType: "Cinémas", cineLoc: "Emplacement", title: "Prochains Événements", place: "Lieu", date: "Date", price: "Prix", time: "Heure", all: "Tous", share: "Découvrez cette aplicación de loisirs à Gérone: ", cartellera: "CINÉMA", cineTitle: "Programme Cinéma" },
-            de: { filterType: "Freizeit", comarca: "Landkreis", cineType: "Kinos", cineLoc: "Standort", title: "Kommende Events", place: "Ort", date: "Datum", price: "Preis", time: "Zeit", all: "Alle", share: "Schau dir diese Freizeit-App für Girona an: ", cartellera: "KINO", cineTitle: "Kinoprogramm" }
+            ca: { cartellera: "CARTELLERA DE CINE", title: "Esdeveniments Propers", cineTitle: "Selecciona un Cine", back: "TORNAR", filterType: "Tipus d'Oci", comarca: "Comarca", all: "Tots" },
+            es: { cartellera: "CARTELERA DE CINE", title: "Próximos Eventos", cineTitle: "Selecciona un Cine", back: "VOLVER", filterType: "Tipo de Ocio", comarca: "Comarca", all: "Todos" }
         };
 
         const categoryNames = {
-            gastronomia: { icon: "fa-utensils", iconColor: "#ff4d4d", ca: "Gastronomia", es: "Gastronomía", en: "Gastronomy", fr: "Gastronomie", de: "Gastronomie" },
-            conciertos: { icon: "fa-guitar", iconColor: "#f43f5e", ca: "Concerts", es: "Conciertos", en: "Concerts", fr: "Concerts", de: "Konzerte" },
-            excursiones: { icon: "fa-mountain", iconColor: "#16a34a", ca: "Excursions", es: "Excursiones", en: "Excursions", fr: "Excursions", de: "Ausflüge" },
-            actividades: { icon: "fa-palette", iconColor: "#06b6d4", ca: "Activitats", es: "Actividades", en: "Activities", fr: "Activités", de: "Aktivitäten" },
-            exposiciones: { icon: "fa-image", iconColor: "#6366f1", ca: "Exposicions", es: "Exposiciones", en: "Exhibitions", fr: "Expositions", de: "Ausstellungen" },
-            fiestas: { icon: "fa-republican", iconColor: "#eab308", ca: "Festes", es: "Fiestas", en: "Festivals", fr: "Fêtes", de: "Feste" },
-            festivales: { icon: "fa-ticket", iconColor: "#3b82f6", ca: "Festivals", es: "Festivales", en: "Festivals", fr: "Festivals", de: "Festivals" },
-            mercadillos: { icon: "fa-store", iconColor: "#ec4899", ca: "Mercadillos", es: "Mercadillos", en: "Markets", fr: "Marchés", de: "Märkte" },
-            teatro: { icon: "fa-masks-theater", iconColor: "#a855f7", ca: "Teatre", es: "Teatro", en: "Theater", fr: "Théâtre", de: "Theater" }
+            gastronomia: { icon: "fa-utensils", iconColor: "#ff4d4d", ca: "Gastronomia", es: "Gastronomía" },
+            conciertos: { icon: "fa-guitar", iconColor: "#f43f5e", ca: "Concerts", es: "Conciertos" },
+            actividades: { icon: "fa-palette", iconColor: "#06b6d4", ca: "Activitats", es: "Actividades" },
+            teatro: { icon: "fa-masks-theater", iconColor: "#a855f7", ca: "Teatre", es: "Teatro" }
         };
 
         const comarcasNormales = ["Alt Empordà", "Baix Empordà", "Cerdanya", "Garrotxa", "Gironès", "Pla de l'Estany", "Ripollès", "Selva"];
-        const ubicacionesCine = ["Girona", "Blanes", "Figueres", "Olot", "Palamós", "Platja d'Aro", "Ripoll", "Roses", "Salt", "Begur", "Torroella de Montgrí"];
-        const cinesLista = ["Cinema Truffaut", "Cinemes Albeniz", "Ocine Girona", "Ocine Blanes", "Cinemes Olot", "Cinema Arinco", "Cinema Kyton", "Ocine Platja d'Aro", "Cinema Teatre Comtal", "Cinemes Roses", "Odeón Girona Multicines", "Cinema Casino Cultural", "Cinema Montgri"];
 
-        function compartirApp() {
-            const msg = translations[currentLang].share;
-            const url = window.location.href.split('?')[0]; 
-            window.open(`https://wa.me/?text=${encodeURIComponent(msg + url)}`, '_blank');
-        }
-
-        // --- CARGA BLINDADA DESDE GITHUB JSON ---
         async function loadData() {
             try {
-                const [resEve, resCine] = await Promise.all([
-                    fetch('eventos.json'),
-                    fetch('cine.json')
-                ]);
+                const [resEve, resCine] = await Promise.all([ fetch('eventos.json'), fetch('cine.json') ]);
                 eventData = await resEve.json();
                 cineData = await resCine.json();
                 renderEvents(); renderCategories(); renderComarcas();
-            } catch (e) { console.error("Error cargando archivos JSON", e); }
+            } catch (e) { console.error(e); }
         }
 
-        function activarCartellera() {
-            isCartelleraMode = !isCartelleraMode;
-            const btn = document.getElementById('btn-cartellera');
-            const title = document.getElementById('txt-events-title');
-            const topHeader = document.getElementById('top-header');
-            const cineHeader = document.getElementById('cine-header');
-            const t = translations[currentLang];
+        // --- NAVEGACIÓN QUIRÚRGICA ---
+        function irACartellera() {
+            isCartelleraMode = true;
+            selectedCine = null;
+            document.getElementById('filtros-home').classList.add('hidden');
+            document.getElementById('top-header').classList.add('hidden');
+            document.getElementById('cine-header').classList.remove('hidden');
+            document.getElementById('txt-events-title').innerText = translations[currentLang].cineTitle;
+            document.getElementById('txt-tornar').innerText = translations[currentLang].back;
+            renderCineSelection();
+        }
 
-            if(isCartelleraMode) {
-                btn.style.background = "#10b981";
-                title.innerText = t.cineTitle;
-                topHeader.classList.add('hidden');
-                cineHeader.classList.remove('hidden');
-                document.getElementById('txt-filter-type').innerText = t.cineType;
-                document.getElementById('txt-filter-comarca').innerText = t.cineLoc;
+        function volverAHome() {
+            if (isCartelleraMode && selectedCine) {
+                // Si estamos viendo películas de un cine, volvemos a la lista de cines
+                selectedCine = null;
+                renderCineSelection();
             } else {
-                btn.style.background = "#1e5d8a";
-                title.innerText = t.title;
-                topHeader.classList.remove('hidden');
-                cineHeader.classList.add('hidden');
-                document.getElementById('txt-filter-type').innerText = (currentCategory==='all') ? t.filterType : (categoryNames[currentCategory] ? categoryNames[currentCategory][currentLang] : currentCategory);
-                document.getElementById('txt-filter-comarca').innerText = (currentComarca==='all') ? t.comarca : currentComarca;
+                // Si estamos en la lista de cines, volvemos al Home
+                isCartelleraMode = false;
+                document.getElementById('filtros-home').classList.remove('hidden');
+                document.getElementById('top-header').classList.remove('hidden');
+                document.getElementById('cine-header').classList.add('hidden');
+                document.getElementById('txt-events-title').innerText = translations[currentLang].title;
+                renderEvents();
             }
-            renderCategories(); renderComarcas(); renderEvents();
         }
 
-        function selectLang(l, f, lbl) {
-            currentLang = l;
-            document.getElementById('selected-lang-content').innerHTML = `<img src="${f}" class="flag-icon"> ${lbl}`;
-            document.querySelectorAll('.options-menu').forEach(m => m.classList.remove('show'));
-            const t = translations[l];
-            if(isCartelleraMode) {
-                document.getElementById('txt-filter-type').innerText = t.cineType;
-                document.getElementById('txt-filter-comarca').innerText = t.cineLoc;
-            } else {
-                document.getElementById('txt-filter-type').innerText = (currentCategory==='all') ? t.filterType : (categoryNames[currentCategory] ? categoryNames[currentCategory][l] : currentCategory);
-                document.getElementById('txt-filter-comarca').innerText = (currentComarca==='all') ? t.comarca : currentComarca;
-            }
-            document.getElementById('txt-cartellera').innerText = t.cartellera;
-            document.getElementById('txt-events-title').innerText = isCartelleraMode ? t.cineTitle : t.title;
-            renderEvents(); renderCategories(); renderComarcas();
-        }
-
-        function filterCat(c) { 
-            currentCategory = c; 
-            if(isCartelleraMode) {
-                document.getElementById('txt-filter-type').innerText = (c === 'all') ? translations[currentLang].cineType : c;
-            } else {
-                document.getElementById('txt-filter-type').innerText = (c === 'all') ? translations[currentLang].filterType : (categoryNames[c] ? categoryNames[c][currentLang] : c);
-            }
-            toggleMenu('typeMenu'); renderEvents(); 
-        }
-
-        function filterCom(c) { 
-            currentComarca = c; 
-            const label = isCartelleraMode ? translations[currentLang].cineLoc : translations[currentLang].comarca;
-            document.getElementById('txt-filter-comarca').innerText = (c === 'all') ? label : c; 
-            toggleMenu('comarcaMenu'); renderEvents(); 
-        }
-
-        function renderCategories() {
-            const menu = document.getElementById('typeMenu');
-            let h = `<div class="option-item" onclick="filterCat('all')"><i class="fas fa-th-large text-gray-400"></i> ${translations[currentLang].all}</div>`;
-            if(isCartelleraMode) {
-                cinesLista.forEach(cine => { h += `<div class="option-item" onclick="filterCat('${cine}')"><i class="fas fa-film text-emerald-500"></i> ${cine}</div>`; });
-            } else {
-                for (let k in categoryNames) { 
-                    const cat = categoryNames[k];
-                    h += `<div class="option-item" onclick="filterCat('${k}')"><i class="fas ${cat.icon}" style="color:${cat.iconColor}"></i> ${cat[currentLang]}</div>`; 
-                }
-            }
-            menu.innerHTML = h;
-        }
-
-        function renderComarcas() {
-            const menu = document.getElementById('comarcaMenu');
-            let h = `<div class="option-item" onclick="filterCom('all')"><i class="fas fa-map text-gray-400"></i> ${translations[currentLang].all}</div>`;
-            const lista = isCartelleraMode ? ubicacionesCine : comarcasNormales;
-            lista.forEach(item => { 
-                const safeName = item.replace(/'/g, "\\'");
-                h += `<div class="option-item" onclick="filterCom('${safeName}')"><i class="fas fa-location-dot text-cyan-500"></i> ${item}</div>`; 
-            });
-            menu.innerHTML = h;
-        }
-
-        function renderEvents() {
+        // --- RENDERIZADO DE PANTALLA BONITA DE CINES ---
+        function renderCineSelection() {
             const grid = document.getElementById('events-grid');
-            const dataToUse = isCartelleraMode ? cineData : eventData;
+            const cinesUnicos = [...new Set(cineData.map(c => c.CINE || c.cine))];
             
-            let filtered = dataToUse.filter(ev => {
-                if (isCartelleraMode) {
-                    const matchCine = currentCategory === 'all' || (ev.CINE || ev.cine) === currentCategory;
-                    const matchLoc = currentComarca === 'all' || (ev.MUNICIPIO || ev.municipio) === currentComarca;
-                    return matchCine && matchLoc;
-                } else {
-                    const cat = (ev.Categoria || ev.categoria || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-                    if (cat === 'cine') return false;
-                    const matchCat = currentCategory === 'all' || cat === currentCategory.toLowerCase();
-                    const matchCom = currentComarca === 'all' || (ev.Comarca || ev.comarca) === currentComarca;
-                    return matchCat && matchCom;
-                }
-            });
+            grid.innerHTML = cinesUnicos.map(cine => `
+                <div onclick="verPeliculasDeCine('${cine}')" class="cine-card col-span-2 flex items-center justify-between">
+                    <span class="text-xl uppercase">${cine}</span>
+                    <i class="fas fa-chevron-right opacity-50"></i>
+                </div>
+            `).join('');
+        }
 
-            if(filtered.length === 0) { 
-                grid.innerHTML = `<p class="text-white col-span-2 text-center opacity-60 py-10">No hi ha dades.</p>`; 
-                return; 
-            }
+        function verPeliculasDeCine(cine) {
+            selectedCine = cine;
+            document.getElementById('txt-events-title').innerText = cine;
+            const grid = document.getElementById('events-grid');
+            const pelis = cineData.filter(c => (c.CINE || c.cine) === cine);
 
-            grid.innerHTML = filtered.map(ev => {
-                const id = ev.ID || ev.id || Math.random();
-                const titulo = ev['Titulo_'+currentLang.toUpperCase()] || ev.TITULO || ev.titulo || ev.Titulo_CA;
-                const img = ev.Imagen_URL || ev.IMAGEN_URL || ev.img;
-                const muni = ev.Municipio || ev.MUNICIPIO || ev.municipio;
-                const isFav = myLikes.includes(String(id));
-                
+            grid.innerHTML = pelis.map(p => {
+                const titulo = p['Titulo_'+currentLang.toUpperCase()] || p.TITULO || p.titulo;
                 return `
-                <div onclick="abrirDetalle('${id}', ${isCartelleraMode})" class="bg-white rounded-[1.5rem] overflow-hidden shadow-xl active:scale-95 transition-all cursor-pointer relative">
-                    ${isFav ? '<div class="absolute top-2 right-2 z-10 text-red-500 bg-white/80 w-6 h-6 rounded-full flex items-center justify-center text-[10px] shadow-sm"><i class="fas fa-heart"></i></div>' : ''}
-                    <img src="${img}" class="h-32 w-full object-cover" loading="lazy">
+                <div onclick="abrirDetallePelicula('${p.ID || p.id}')" class="bg-white rounded-[1.5rem] overflow-hidden shadow-xl active:scale-95 transition-all cursor-pointer">
+                    <img src="${p.Imagen_URL || p.IMAGEN_URL || p.img}" class="h-48 w-full object-cover">
                     <div class="p-3">
-                        <h3 class="font-bold text-[13px] text-gray-800 leading-tight h-8 overflow-hidden">${titulo}</h3>
-                        <p class="text-[10px] text-gray-400 mt-1 uppercase font-bold">${muni}</p>
+                        <h3 class="font-bold text-[13px] text-gray-800 leading-tight">${titulo}</h3>
                     </div>
                 </div>`;
             }).join('');
         }
 
-        function abrirDetalle(id, isCine) {
-            const dataToSearch = isCine ? cineData : eventData;
-            const ev = dataToSearch.find(e => String(e.ID || e.id) === String(id)) || dataToSearch[0];
+        // --- FUNCIONES CORE ---
+        function renderEvents() {
+            const grid = document.getElementById('events-grid');
+            let filtered = eventData.filter(ev => {
+                const catMatch = currentCategory === 'all' || (ev.Categoria || ev.categoria || "").toLowerCase() === currentCategory.toLowerCase();
+                const comMatch = currentComarca === 'all' || (ev.Comarca || ev.comarca) === currentComarca;
+                return catMatch && comMatch;
+            });
+            
+            grid.innerHTML = filtered.map(ev => `
+                <div onclick="abrirDetalleEvent('${ev.ID || ev.id}')" class="bg-white rounded-[1.5rem] overflow-hidden shadow-xl active:scale-95 transition-all cursor-pointer">
+                    <img src="${ev.Imagen_URL || ev.IMAGEN_URL || ev.img}" class="h-32 w-full object-cover">
+                    <div class="p-3">
+                        <h3 class="font-bold text-[13px] text-gray-800 leading-tight h-8 overflow-hidden">${ev.Titulo_CA || ev.TITULO}</h3>
+                        <p class="text-[10px] text-gray-400 mt-1 uppercase font-bold">${ev.Municipio || ev.municipio}</p>
+                    </div>
+                </div>`).join('');
+        }
+
+        function abrirDetallePelicula(id) {
+            const p = cineData.find(e => String(e.ID || e.id) === String(id));
+            mapearADetalle(p, true);
+        }
+
+        function abrirDetalleEvent(id) {
+            const e = eventData.find(ev => String(ev.ID || ev.id) === String(id));
+            mapearADetalle(e, false);
+        }
+
+        function mapearADetalle(ev, isCine) {
             if(!ev) return;
-            currentIdDetalle = String(id);
             const lang = currentLang.toUpperCase();
-            
             document.getElementById('titulo-det').innerText = ev['Titulo_'+lang] || ev.TITULO || ev.titulo || ev.Titulo_CA;
-            document.getElementById('lugar-det').innerText = ev.Municipio || ev.MUNICIPIO || ev.municipio;
-            document.getElementById('fecha-det').innerText = ev.Fecha ? ev.Fecha.split('T')[0].split('-').reverse().join('/') : "--/--/--";
-            document.getElementById('hora-det').innerText = (ev.Hora || ev.HORA) ? (ev.Hora || ev.HORA).toString().substring(0, 5) : "--:--";
-            
-            let p = ev.Precio || ev.PRECIO || "---";
-            document.getElementById('precio-det').innerText = (p && !isNaN(p)) ? p + " €" : p;
-            
+            document.getElementById('lugar-det').innerText = isCine ? (ev.CINE || ev.cine) : (ev.Municipio || ev.municipio);
+            document.getElementById('fecha-det').innerText = ev.Fecha ? ev.Fecha.split('T')[0] : "--";
+            document.getElementById('hora-det').innerText = ev.Hora || ev.HORA || "--";
+            document.getElementById('precio-det').innerText = (ev.Precio || ev.PRECIO || "0") + "€";
             document.getElementById('desc-det').innerText = ev['Desc_'+lang] || ev.SINOPSIS_ES || ev.desc || ev.Desc_CA;
             document.getElementById('img-det').src = ev.Imagen_URL || ev.IMAGEN_URL || ev.img;
             document.getElementById('img-det-bg').src = ev.Imagen_URL || ev.IMAGEN_URL || ev.img;
             document.getElementById('direccion-det').innerText = ev.Direccion || ev.DIRECCION || ev.municipio;
             
-            currentTicketUrl = ev.Link_Entradas || ev.LINK_RESERVA || ev.link;
-            const btnRes = document.getElementById('btn-reserve');
-            btnRes.style.display = (currentTicketUrl && currentTicketUrl.trim() !== "") ? "block" : "none";
-            
-            updateLikeVisual();
+            const link = ev.Link_Entradas || ev.LINK_RESERVA || ev.link;
+            document.getElementById('btn-reserve').onclick = () => window.open(link, '_blank');
             document.getElementById('pantalla-detalle').classList.remove('hidden');
         }
 
-        function toggleLikeActual() {
-            const idStr = String(currentIdDetalle);
-            if(myLikes.includes(idStr)) { myLikes = myLikes.filter(id => id !== idStr); } else { myLikes.push(idStr); }
-            localStorage.setItem('giroci_likes', JSON.stringify(myLikes));
-            updateLikeVisual(); renderEvents();
-        }
-
-        function updateLikeVisual() {
-            const isFav = myLikes.includes(String(currentIdDetalle));
-            const btn = document.getElementById('btn-like-det');
-            const icon = btn.querySelector('i');
-            if(isFav) { icon.className = "fas fa-heart text-red-500"; btn.classList.add('bg-white'); } else { icon.className = "far fa-heart text-white"; btn.classList.remove('bg-white'); }
-        }
-
-        function toggleMenu(id) { 
-            const m = document.getElementById(id); const isVisible = m.classList.contains('show'); 
-            document.querySelectorAll('.options-menu').forEach(x => x.classList.remove('show'));
-            if(!isVisible) m.classList.add('show'); 
-        }
-        function abrirMapa() { 
-            const dir = document.getElementById('direccion-det').innerText;
-                window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(dir)}`, '_blank');
-        }
         function cerrarDetalle() { document.getElementById('pantalla-detalle').classList.add('hidden'); }
-        function irAReserva() { if(currentTicketUrl) window.open(currentTicketUrl, '_blank'); }
-        
         function entrarApp() { 
             document.getElementById('splash-screen').style.opacity = '0'; 
             setTimeout(() => { 
@@ -380,6 +283,25 @@
                 loadData(); 
             }, 600); 
         }
+        function toggleMenu(id) { 
+            const m = document.getElementById(id);
+            const isVisible = m.classList.contains('show');
+            document.querySelectorAll('.options-menu').forEach(x => x.classList.remove('show'));
+            if(!isVisible) m.classList.add('show');
+        }
+        function selectLang(l, f, lbl) { currentLang = l; document.getElementById('selected-lang-content').innerHTML = `<img src="${f}" class="flag-icon"> ${lbl}`; toggleMenu('langMenu'); }
+        function renderCategories() {
+            let h = `<div class="option-item" onclick="filterCat('all')">${translations[currentLang].all}</div>`;
+            for (let k in categoryNames) h += `<div class="option-item" onclick="filterCat('${k}')">${categoryNames[k][currentLang]}</div>`;
+            document.getElementById('typeMenu').innerHTML = h;
+        }
+        function renderComarcas() {
+            let h = `<div class="option-item" onclick="filterCom('all')">${translations[currentLang].all}</div>`;
+            comarcasNormales.forEach(c => h += `<div class="option-item" onclick="filterCom('${c}')">${c}</div>`);
+            document.getElementById('comarcaMenu').innerHTML = h;
+        }
+        function filterCat(c) { currentCategory = c; toggleMenu('typeMenu'); renderEvents(); }
+        function filterCom(c) { currentComarca = c; toggleMenu('comarcaMenu'); renderEvents(); }
     </script>
 </body>
 </html>
