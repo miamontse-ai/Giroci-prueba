@@ -3,155 +3,124 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GirOci 1.1 - Master Fix</title>
+    <title>GirOci - Master 1.5</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         body { background: linear-gradient(180deg, #38b6ff 0%, #43e97b 100%); min-height: 100vh; font-family: sans-serif; margin: 0; }
-        #splash-screen { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: space-around; z-index: 9999; background: linear-gradient(180deg, #38b6ff 0%, #43e97b 100%); transition: opacity 0.5s ease; }
-        .logo-splash { width: 85%; max-width: 450px; filter: drop-shadow(0 20px 30px rgba(0,0,0,0.2)); }
-        .btn-entrar { background: white; color: #1e5d8a; padding: 18px 80px; border-radius: 50px; font-weight: 900; font-size: 1.5rem; cursor: pointer; border: none; box-shadow: 0 10px 25px rgba(0,0,0,0.2); -webkit-tap-highlight-color: transparent; }
-        #main-content { display: none; opacity: 0; max-width: 500px; margin: 0 auto; padding: 20px; transition: opacity 0.5s ease; }
-        .custom-select { position: relative; }
-        .options-menu { position: absolute; top: 110%; left: 0; right: 0; background: white; border-radius: 15px; display: none; z-index: 2000; box-shadow: 0 10px 20px rgba(0,0,0,0.2); padding: 5px; }
-        .options-menu.show { display: block; }
-        .option-item { padding: 12px; display: flex; align-items: center; gap: 10px; color: #333; cursor: pointer; font-weight: bold; border-radius: 10px; }
+        #splash-screen { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: space-around; z-index: 9999; background: linear-gradient(180deg, #38b6ff 0%, #43e97b 100%); transition: opacity 0.4s; }
+        .logo-splash { width: 90%; max-width: 500px; filter: drop-shadow(0 20px 30px rgba(0,0,0,0.3)); }
+        .btn-entrar { background: white; color: #1e5d8a; padding: 20px 80px; border-radius: 60px; font-weight: 900; font-size: 1.5rem; cursor: pointer; border: none; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+        #main-content { display: none; opacity: 0; max-width: 500px; margin: 0 auto; padding: 20px; transition: opacity 0.5s; }
     </style>
 </head>
 <body>
 
     <div id="splash-screen">
-        <img src="logo.png" alt="Logo" class="logo-splash">
+        <img src="logo.png" class="logo-splash">
         <button class="btn-entrar" onclick="entrarApp()">ENTRAR</button>
     </div>
 
     <div id="main-content">
-        <div class="flex justify-between items-center mb-6">
-            <button class="w-10 h-10 bg-white/20 rounded-xl text-white flex items-center justify-center"><i class="fas fa-share-nodes"></i></button>
-            <div class="custom-select w-[100px]">
-                <button onclick="toggleMenu('langMenu')" class="bg-[#1e5d8a] text-white p-2 rounded-xl w-full font-bold text-sm">CAT</button>
-                <div class="options-menu" id="langMenu">
-                    <div class="option-item" onclick="selectLang('ca')">CAT</div>
-                    <div class="option-item" onclick="selectLang('es')">ESP</div>
-                </div>
-            </div>
+        <div class="flex items-center justify-center gap-2 mb-8">
+            <img src="logo.png" class="w-16 h-16">
+            <h1 class="text-4xl text-white font-black">GirOci</h1>
         </div>
 
-        <div class="flex flex-col items-center mb-8">
-            <img src="logo.png" class="w-20 h-20 mb-2">
-            <h1 class="text-5xl text-white font-black tracking-tighter">GirOci</h1>
-        </div>
-
-        <div id="filter-area" class="space-y-3 mb-8">
-            <button onclick="activarCartellera()" class="w-full bg-blue-600 text-white py-4 rounded-2xl font-black shadow-lg">
-                <i class="fas fa-film mr-2"></i> CARTELLERA DE CINE
+        <div class="space-y-4 mb-8">
+            <button onclick="activarSeccionCine()" class="w-full bg-blue-700 text-white py-5 rounded-2xl font-black text-xl shadow-lg flex items-center justify-center gap-3">
+                <i class="fas fa-film"></i> CARTELLERA DE CINE
             </button>
-            <div class="flex gap-2">
-                <button onclick="toggleMenu('typeMenu')" class="flex-1 bg-[#1e5d8a] text-white p-4 rounded-2xl font-bold">Tipus d'Oci</button>
-                <button onclick="toggleMenu('comarcaMenu')" class="flex-1 bg-[#1e5d8a] text-white p-4 rounded-2xl font-bold">Comarca</button>
-            </div>
-            <div id="typeMenu" class="options-menu"></div>
-            <div id="comarcaMenu" class="options-menu"></div>
         </div>
 
-        <h2 id="section-title" class="text-white text-xl font-black mb-4 uppercase">Esdeveniments</h2>
-        <div id="events-grid" class="grid grid-cols-2 gap-4"></div>
+        <h2 id="txt-seccion" class="text-white text-xl font-black mb-4 uppercase">Esdeveniments</h2>
+        <div id="grid-principal" class="grid grid-cols-2 gap-4 pb-20"></div>
     </div>
 
-    <div id="pantalla-peliculas" class="fixed inset-0 bg-slate-900 z-[50] hidden overflow-y-auto p-6">
-        <button onclick="cerrarPeliculas()" class="text-white mb-6"><i class="fas fa-arrow-left"></i> Tornar</button>
-        <div id="peliculas-grid" class="grid grid-cols-2 gap-4"></div>
+    <div id="pantalla-cine" class="fixed inset-0 bg-slate-900 z-[100] hidden overflow-y-auto p-6">
+        <button onclick="cerrarCine()" class="text-white font-bold mb-6 flex items-center gap-2">
+            <i class="fas fa-arrow-left"></i> TORNAR
+        </button>
+        <h2 id="nombre-cine-header" class="text-cyan-400 font-black text-2xl mb-6 uppercase"></h2>
+        <div id="grid-peliculas" class="grid grid-cols-2 gap-4"></div>
     </div>
 
     <script>
-        var eventData = [], cineData = [], currentLang = 'ca', isCartellera = false;
+        var eventData = [], cineData = [];
 
-        // FUNCIÓN CRÍTICA: Ahora el cambio de pantalla es lo PRIMERO que ocurre
         function entrarApp() {
-            var splash = document.getElementById('splash-screen');
-            var main = document.getElementById('main-content');
-            
-            // 1. Ocultar Splash inmediatamente
-            splash.style.opacity = '0';
-            setTimeout(function() {
-                splash.style.display = 'none';
-                main.style.display = 'block';
-                main.style.opacity = '1';
-                // 2. Cargar datos una vez dentro
-                loadData();
-            }, 500);
+            document.getElementById('splash-screen').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('splash-screen').style.display = 'none';
+                document.getElementById('main-content').style.display = 'block';
+                setTimeout(() => document.getElementById('main-content').style.opacity = '1', 50);
+                cargarArchivos();
+            }, 400);
         }
 
-        function loadData() {
-            // Cargamos eventos
-            fetch("eventos.json?v=" + Date.now())
-                .then(function(r) { return r.json(); })
-                .then(function(data) { eventData = data; renderEvents(); })
-                .catch(function(e) { console.log("Error eventos"); });
+        async function cargarArchivos() {
+            try {
+                // CARGA EVENTOS
+                const resEv = await fetch("eventos.json?v=" + Date.now());
+                eventData = await resEv.json();
+                renderEvents();
 
-            // Cargamos cine
-            fetch("cine.json?v=" + Date.now())
-                .then(function(r) { return r.json(); })
-                .then(function(data) { cineData = data; })
-                .catch(function(e) { console.log("Error cine"); });
+                // CARGA CINE (csvjson (2).json)
+                const resCi = await fetch("cine.json?v=" + Date.now());
+                const rawCine = await resCi.json();
                 
-            renderMenus();
-        }
-
-        function toggleMenu(id) {
-            var m = document.getElementById(id);
-            var wasOpen = m.style.display === 'block';
-            document.querySelectorAll('.options-menu').forEach(function(el){ el.style.display = 'none'; });
-            m.style.display = wasOpen ? 'none' : 'block';
-        }
-
-        function renderMenus() {
-            var cHtml = '<div class="option-item" onclick="filterCom(\'all\')">Totes</div>';
-            ["Alt Empordà", "Baix Empordà", "Cerdanya", "Garrotxa", "Gironès", "Pla de l'Estany", "Ripollès", "Selva"].forEach(function(c){
-                cHtml += '<div class="option-item" onclick="filterCom(\''+c+'\')">'+c+'</div>';
-            });
-            document.getElementById('comarcaMenu').innerHTML = cHtml;
+                // BLINDAJE: Filtramos para que SOLO cargue filas que tengan un TÍTULO real
+                cineData = rawCine.filter(item => item.TITULO && item.TITULO.length > 2);
+                
+                console.log("Cine cargado correctamente:", cineData.length, "películas.");
+            } catch (e) {
+                console.error("Error cargando los datos. Revisa que los nombres de archivo sean correctos.");
+            }
         }
 
         function renderEvents() {
-            var grid = document.getElementById('events-grid');
-            var html = '';
-            eventData.forEach(function(ev) {
-                html += '<div class="bg-white rounded-2xl overflow-hidden shadow-lg">' +
-                        '<img src="'+ev.Imagen_URL+'" class="h-32 w-full object-cover">' +
-                        '<div class="p-3"><p class="font-bold text-[11px]">'+(ev.Titulo_CA || ev.Titulo_ES)+'</p></div>' +
-                        '</div>';
-            });
-            grid.innerHTML = html || '<p class="text-white text-center col-span-2">Carregant...</p>';
+            const grid = document.getElementById('grid-principal');
+            grid.innerHTML = eventData.map(ev => `
+                <div class="bg-white rounded-xl overflow-hidden shadow-md">
+                    <img src="${ev.Imagen_URL}" class="w-full h-32 object-cover">
+                    <div class="p-2"><p class="font-bold text-[10px] leading-tight text-gray-800">${ev.Titulo_CA || ev.Titulo_ES}</p></div>
+                </div>
+            `).join('');
         }
 
-        function activarCartellera() {
-            isCartellera = true;
-            document.getElementById('section-title').innerText = "Cines";
-            var grid = document.getElementById('events-grid');
-            var cines = ["Ocine Girona", "Odeon Girona", "Ocine Blanes", "Ocine Platja d'Aro", "Multicines Olot", "Cat Cinemes"];
-            var html = '';
-            cines.forEach(function(c) {
-                html += '<div onclick="abrirCine(\''+c+'\')" class="col-span-2 bg-white/10 p-4 rounded-xl text-white font-bold border border-white/10">'+c+'</div>';
-            });
-            grid.innerHTML = html;
+        function activarSeccionCine() {
+            document.getElementById('txt-seccion').innerText = "Cines Disponibles";
+            const grid = document.getElementById('grid-principal');
+            const listaCines = ["Ocine Girona", "Odeon Girona", "Ocine Blanes", "Ocine Platja d'Aro", "Multicines Olot", "Cat Cinemes"];
+            
+            grid.innerHTML = listaCines.map(cine => `
+                <div onclick="abrirCartellera('${cine}')" class="col-span-2 bg-white/10 p-5 rounded-xl text-white font-bold border border-white/20 flex justify-between items-center active:bg-white/20">
+                    ${cine} <i class="fas fa-chevron-right opacity-30"></i>
+                </div>
+            `).join('');
         }
 
-        function abrirCine(nombre) {
-            var pGrid = document.getElementById('peliculas-grid');
-            var filtered = cineData.filter(function(p){ return p.CINE === nombre && p.TITULO; });
-            var html = '';
-            filtered.forEach(function(p){
-                html += '<div class="bg-white/5 p-2 rounded-xl text-center text-white text-xs">' +
-                        '<img src="'+p.IMAGEN_URL+'" class="rounded-lg mb-2">' +
-                        '<p>'+p.TITULO+'</p></div>';
-            });
-            pGrid.innerHTML = html || '<p class="text-white">No hi ha sessions avui.</p>';
-            document.getElementById('pantalla-peliculas').classList.remove('hidden');
+        function abrirCartellera(cineNombre) {
+            document.getElementById('nombre-cine-header').innerText = cineNombre;
+            const pelis = cineData.filter(p => p.CINE === cineNombre);
+            const grid = document.getElementById('grid-peliculas');
+            
+            if(pelis.length === 0) {
+                grid.innerHTML = '<p class="text-white/50 col-span-2 text-center py-10">No hi ha dades actualitzades per aquest cinema.</p>';
+            } else {
+                grid.innerHTML = pelis.map(p => `
+                    <div class="bg-white/5 p-2 rounded-xl text-center shadow-lg">
+                        <img src="${p.IMAGEN_URL}" class="w-full rounded-lg mb-2 border border-white/10">
+                        <p class="text-white text-[10px] font-bold leading-tight">${p.TITULO}</p>
+                    </div>
+                `).join('');
+            }
+            document.getElementById('pantalla-cine').classList.remove('hidden');
         }
 
-        function cerrarPeliculas() { document.getElementById('pantalla-peliculas').classList.add('hidden'); }
-        function selectLang(l) { currentLang = l; toggleMenu('langMenu'); }
+        function cerrarCine() {
+            document.getElementById('pantalla-cine').classList.add('hidden');
+        }
     </script>
 </body>
 </html>
