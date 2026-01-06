@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GirOci - Master Flow Cine</title>
+    <title>GirOci - Master Blindado</title>
     <link rel="manifest" href="manifest.json?v=12">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -13,38 +13,43 @@
     <style>
         body { background: linear-gradient(180deg, #38b6ff 0%, #43e97b 100%); min-height: 100vh; font-family: 'ui-sans-serif', system-ui, -apple-system, sans-serif; margin: 0; overflow-x: hidden; }
         
-        /* Splash Screen */
         #splash-screen { position: fixed; inset: 0; width: 100vw; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: space-around; z-index: 3000; background: linear-gradient(180deg, #38b6ff 0%, #43e97b 100%); transition: all 0.6s ease; padding: 2rem 0; }
         .logo-splash { width: 95%; max-width: 550px; filter: drop-shadow(0 20px 40px rgba(0,0,0,0.3)); }
         .btn-entrar { background: white; color: #1e5d8a; padding: 20px 70px; border-radius: 50px; font-weight: 900; font-size: 1.5rem; box-shadow: 0 10px 30px rgba(0,0,0,0.25); cursor: pointer; border: none; }
 
         #main-content { display: none; opacity: 0; transition: opacity 0.5s ease; padding: 10px 15px; max-width: 500px; margin: 0 auto; }
 
-        /* Botones de Cine Elegantes */
-        .cine-card { 
-            background: white; border-radius: 24px; padding: 28px; 
-            text-align: center; color: #1e5d8a; font-weight: 900; 
-            font-size: 1.3rem; box-shadow: 0 12px 24px rgba(0,0,0,0.12);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); border: none; width: 100%;
-            display: flex; align-items: center; justify-content: space-between;
-        }
-        .cine-card:active { transform: scale(0.96); background: #f0f9ff; }
-
-        /* Selectores */
+        .custom-select { position: relative; user-select: none; }
         .select-trigger { 
             background: #1e5d8a; border-radius: 20px; padding: 14px 18px; 
             color: white; display: flex; align-items: center; justify-content: space-between; 
             font-weight: 800; font-size: 15px; cursor: pointer; box-shadow: 0 10px 20px rgba(0,0,0,0.15); 
         }
+        
         .options-menu { 
             position: absolute; top: 110%; left: 0; right: 0;
             background: rgba(255, 255, 255, 0.75); backdrop-filter: blur(15px); 
             border-radius: 24px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2); 
-            display: none; z-index: 2000; padding: 10px; border: 1px solid rgba(255, 255, 255, 0.4);
+            display: none; z-index: 2000; overflow-y: auto; max-height: 400px; 
+            padding: 10px; border: 1px solid rgba(255, 255, 255, 0.4);
         }
         .options-menu.show { display: block; animation: fadeIn 0.2s ease-out; }
-        .option-item { padding: 14px 16px; display: flex; align-items: center; gap: 14px; color: #1e293b; font-size: 16px; cursor: pointer; font-weight: 700; border-radius: 15px; }
+        
+        .option-item { 
+            padding: 14px 16px; display: flex; align-items: center; gap: 14px; 
+            color: #1e293b; font-size: 16px; cursor: pointer; font-weight: 700; 
+            border-radius: 15px; transition: background 0.2s;
+        }
         .flag-icon { width: 22px; height: 15px; object-fit: cover; border-radius: 2px; }
+
+        /* Estilo Botones de Cine */
+        .cine-card-btn { 
+            background: white; border-radius: 20px; padding: 22px; 
+            margin-bottom: 12px; width: 100%; color: #1e5d8a; 
+            font-weight: 900; font-size: 1.2rem; display: flex; 
+            justify-content: space-between; align-items: center;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+        }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
@@ -56,135 +61,141 @@
     </div>
 
     <div id="main-content">
-        <div id="top-header" class="flex justify-between items-center mb-4 px-1">
-            <div id="back-nav" class="invisible">
-                <button onclick="navegacionAtras()" class="bg-black/20 text-white px-4 py-2 rounded-xl font-bold flex items-center gap-2 border border-white/20">
-                    <i class="fas fa-arrow-left"></i> <span id="txt-back">TORNAR</span>
-                </button>
-            </div>
-            <div class="relative w-[100px]">
-                <div class="select-trigger !py-2 !px-3 !bg-white/20 !backdrop-blur-md !border-white/30" onclick="toggleMenu('langMenu')">
-                    <span id="sel-lang" class="flex items-center gap-2"><img src="bandera_ca.png" class="flag-icon"> CAT</span>
+        <div id="top-header" class="flex justify-between items-center mb-2 px-1 relative">
+            <button id="btn-back-nav" onclick="control NavegacionAtras()" class="hidden w-10 h-10 bg-black/20 backdrop-blur-md rounded-xl text-white flex items-center justify-center border border-white/20">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <button id="btn-share-main" onclick="compartirApp()" class="w-10 h-10 bg-white/20 backdrop-blur-md rounded-xl border border-white/30 text-white flex items-center justify-center">
+                <i class="fas fa-share-nodes"></i>
+            </button>
+
+            <div class="custom-select w-[110px]" id="langSelect">
+                <div class="select-trigger !py-2 !px-3 !bg-white/20 !backdrop-blur-md" onclick="toggleMenu('langMenu')">
+                    <span id="selected-lang-content" class="flex items-center gap-2"><img src="bandera_ca.png" class="flag-icon"> CAT</span>
                 </div>
-                <div class="options-menu !right-0 !left-auto w-[120px]" id="langMenu">
+                <div class="options-menu !w-[130px] !right-0 !left-auto" id="langMenu">
                     <div class="option-item" onclick="selectLang('ca', 'bandera_ca.png', 'CAT')">CAT</div>
                     <div class="option-item" onclick="selectLang('es', 'bandera_es.png', 'ESP')">ESP</div>
                 </div>
             </div>
         </div>
 
-        <div class="flex flex-col items-center mb-6">
-            <img src="logotipo.png" alt="Logo" class="w-28 h-28 object-contain drop-shadow-2xl mb-2">
-            <h1 class="text-6xl text-white font-black tracking-tighter">GirOci</h1>
+        <div class="flex items-center justify-center gap-2 mb-6 px-2">
+            <img src="logotipo.png" alt="Logo" class="w-32 h-32 object-contain drop-shadow-2xl">
+            <h1 class="text-6xl text-white font-black tracking-tighter -ml-1">GirOci</h1>
         </div>
 
-        <div id="panel-filtros">
-            <div id="btn-cartellera" class="select-trigger !justify-center gap-3 !bg-emerald-500 mb-4" onclick="irASeccionCines()">
+        <div id="controles-ocio" class="flex flex-col gap-2 mb-8">
+            <div id="btn-cartellera" class="select-trigger !justify-center gap-3 !bg-emerald-500" onclick="mostrarListaCines()">
                 <i class="fas fa-film text-white"></i>
                 <span id="txt-cartellera">CARTELLERA DE CINE</span>
             </div>
-            <div class="flex gap-2 mb-8">
-                <div class="select-trigger flex-1" onclick="toggleMenu('typeMenu')"><span id="txt-tipo">Tipus d'Oci</span></div>
-                <div class="select-trigger flex-1" onclick="toggleMenu('comarcaMenu')"><span id="txt-comarca">Comarca</span></div>
+            <div class="flex gap-2" id="filtros-secundarios">
+                <div class="custom-select flex-1" onclick="toggleMenu('typeMenu')">
+                    <div class="select-trigger"><span id="txt-filter-type">Tipus d'Oci</span></div>
+                </div>
+                <div class="custom-select flex-1" onclick="toggleMenu('comarcaMenu')">
+                    <div class="select-trigger"><span id="txt-filter-comarca">Comarca</span></div>
+                </div>
             </div>
             <div class="options-menu" id="typeMenu"></div>
             <div class="options-menu" id="comarcaMenu"></div>
         </div>
 
-        <h2 id="titulo-seccion" class="text-white text-2xl font-bold mb-5 ml-1">Esdeveniments Propers</h2>
-        <div id="contenedor-principal" class="grid grid-cols-2 gap-4 mb-10"></div>
+        <h2 id="txt-events-title" class="text-white text-2xl font-bold mb-5 ml-1">Esdeveniments Propers</h2>
+        <div id="events-grid" class="grid grid-cols-2 gap-4 mb-10"></div>
     </div>
 
     <div id="pantalla-detalle" class="fixed inset-0 bg-[#1e293b] z-[2500] hidden overflow-y-auto">
         <div class="relative w-full h-[35vh] bg-black flex items-center justify-center">
             <img id="img-det" src="" class="h-full w-auto object-contain">
-            <button onclick="cerrarDetalle()" class="absolute top-6 left-5 bg-black/40 backdrop-blur-md w-10 h-10 rounded-full text-white flex items-center justify-center"><i class="fas fa-arrow-left"></i></button>
+            <button onclick="cerrarDetalle()" class="absolute top-6 left-5 bg-black/30 w-10 h-10 rounded-full text-white flex items-center justify-center"><i class="fas fa-arrow-left"></i></button>
         </div>
         <div class="p-6">
-            <h2 id="tit-det" class="text-3xl font-black text-white mb-6"></h2>
-            <div class="grid grid-cols-2 gap-2 mb-6 text-white">
-                <div class="bg-white/10 p-3 rounded-xl text-center"><p class="text-[10px] text-gray-400 font-bold uppercase">Lloc</p><p id="loc-det" class="text-cyan-400 font-black"></p></div>
-                <div class="bg-white/10 p-3 rounded-xl text-center"><p class="text-[10px] text-gray-400 font-bold uppercase">Preu</p><p id="preu-det" class="text-orange-400 font-black"></p></div>
+            <h2 id="titulo-det" class="text-3xl font-black text-white mb-6"></h2>
+            <div class="grid grid-cols-2 gap-2 mb-6 text-white text-sm">
+                <div class="bg-white/10 p-3 rounded-xl"><p class="text-gray-400 font-bold uppercase">Lloc</p><p id="lugar-det" class="text-cyan-400 font-black"></p></div>
+                <div class="bg-white/10 p-3 rounded-xl"><p class="text-gray-400 font-bold uppercase">Preu</p><p id="precio-det" class="text-orange-400 font-black"></p></div>
             </div>
-            <div class="bg-white/5 p-5 rounded-2xl border border-white/10 mb-8"><p id="desc-det" class="text-gray-300 leading-relaxed"></p></div>
-            <button id="btn-reserva" class="w-full bg-cyan-500 text-white py-5 rounded-2xl font-black uppercase text-lg shadow-xl">Comprar Entrades</button>
+            <p id="desc-det" class="text-gray-300 leading-relaxed mb-10"></p>
+            <button id="btn-reserva" onclick="" class="w-full bg-cyan-500 text-white py-5 rounded-2xl font-black uppercase text-lg">Reservar Entrades</button>
         </div>
     </div>
 
     <script>
-        let currentLang = 'ca', eventData = [], cineData = [], estado = 'home', cineSeleccionado = null;
+        let eventData = [], cineData = [], currentLang = 'ca', vistaActual = 'home';
 
-        async function cargarJSON() {
-            try {
-                const [r1, r2] = await Promise.all([fetch('eventos.json'), fetch('cine.json')]);
-                eventData = await r1.json(); cineData = await r2.json();
-                renderHome();
-            } catch (e) { console.error("Error cargando datos", e); }
+        async function loadData() {
+            const [re, rc] = await Promise.all([fetch('eventos.json'), fetch('cine.json')]);
+            eventData = await re.json(); cineData = await rc.json();
+            renderEvents(eventData, 'event');
         }
 
-        // --- NAVEGACIÓN ---
-        function renderHome() {
-            estado = 'home';
-            document.getElementById('panel-filtros').classList.remove('hidden');
-            document.getElementById('back-nav').classList.add('invisible');
-            document.getElementById('titulo-seccion').innerText = "Esdeveniments Propers";
-            pintarGrid(eventData, 'event');
-        }
-
-        function irASeccionCines() {
-            estado = 'lista-cines';
-            document.getElementById('panel-filtros').classList.add('hidden');
-            document.getElementById('back-nav').classList.remove('invisible');
-            document.getElementById('titulo-seccion').innerText = "Selecciona un Cine";
+        // --- FLUJO DE CINE SIN TOCAR DISEÑO ---
+        function mostrarListaCines() {
+            vistaActual = 'cines';
+            document.getElementById('controles-ocio').classList.add('hidden');
+            document.getElementById('btn-share-main').classList.add('hidden');
+            document.getElementById('btn-back-nav').classList.remove('hidden');
+            document.getElementById('txt-events-title').innerText = "Selecciona un Cine";
+            
             const cines = [...new Set(cineData.map(c => c.CINE))];
-            const grid = document.getElementById('contenedor-principal');
-            grid.innerHTML = cines.map(c => `<button onclick="irACarteleraCine('${c}')" class="cine-card col-span-2"><span>${c}</span><i class="fas fa-chevron-right opacity-30"></i></button>`).join('');
+            const grid = document.getElementById('events-grid');
+            grid.className = "flex flex-col gap-2 mb-10"; // Cambiamos a lista para los botones de cine
+            grid.innerHTML = cines.map(c => `<button onclick="mostrarCartelera('${c}')" class="cine-card-btn"><span>${c}</span><i class="fas fa-chevron-right opacity-30"></i></button>`).join('');
         }
 
-        function irACarteleraCine(cine) {
-            estado = 'cartelera';
-            cineSeleccionado = cine;
-            document.getElementById('titulo-seccion').innerText = cine;
+        function mostrarCartelera(cine) {
+            vistaActual = 'cartelera';
+            document.getElementById('txt-events-title').innerText = cine;
             const pelis = cineData.filter(p => p.CINE === cine);
-            pintarGrid(pelis, 'cine');
+            const grid = document.getElementById('events-grid');
+            grid.className = "grid grid-cols-2 gap-4 mb-10"; // Volvemos a rejilla para los carteles
+            renderEvents(pelis, 'cine');
         }
 
-        function navegacionAtras() {
-            if(estado === 'cartelera') irASeccionCines();
-            else if(estado === 'lista-cines') renderHome();
+        function controlNavegacionAtras() {
+            if(vistaActual === 'cartelera') mostrarListaCines();
+            else {
+                vistaActual = 'home';
+                document.getElementById('controles-ocio').classList.remove('hidden');
+                document.getElementById('btn-share-main').classList.remove('hidden');
+                document.getElementById('btn-back-nav').classList.add('hidden');
+                document.getElementById('txt-events-title').innerText = "Esdeveniments Propers";
+                document.getElementById('events-grid').className = "grid grid-cols-2 gap-4 mb-10";
+                renderEvents(eventData, 'event');
+            }
         }
 
-        // --- RENDERIZADO ---
-        function pintarGrid(datos, tipo) {
-            const grid = document.getElementById('contenedor-principal');
-            grid.innerHTML = datos.map(item => `
+        function renderEvents(data, tipo) {
+            const grid = document.getElementById('events-grid');
+            grid.innerHTML = data.map(item => `
                 <div onclick="abrirDetalle(${item.ID}, '${tipo}')" class="bg-white rounded-2xl overflow-hidden shadow-xl active:scale-95 transition-all cursor-pointer">
                     <img src="${item.Imagen_URL}" class="h-40 w-full object-cover">
-                    <div class="p-3"><h3 class="font-black text-[13px] text-gray-800 leading-tight">${item.TITULO || item.Titulo_CA}</h3></div>
+                    <div class="p-3"><h3 class="font-bold text-sm text-gray-800 leading-tight">${item.TITULO || item.Titulo_CA}</h3></div>
                 </div>`).join('');
         }
 
         function abrirDetalle(id, tipo) {
             const db = (tipo === 'cine') ? cineData : eventData;
             const item = db.find(x => x.ID == id);
-            document.getElementById('tit-det').innerText = item.TITULO || item.Titulo_CA;
-            document.getElementById('loc-det').innerText = item.CINE || item.Municipio;
-            document.getElementById('preu-det').innerText = (item.PRECIO || item.Precio || "0") + " €";
+            document.getElementById('titulo-det').innerText = item.TITULO || item.Titulo_CA;
+            document.getElementById('lugar-det').innerText = item.CINE || item.Municipio;
+            document.getElementById('precio-det').innerText = (item.PRECIO || item.Precio || "0") + "€";
             document.getElementById('desc-det').innerText = item.SINOPSIS_ES || item.Desc_CA;
             document.getElementById('img-det').src = item.Imagen_URL;
             document.getElementById('btn-reserva').onclick = () => window.open(item.LINK_RESERVA || item.Link_Entradas, '_blank');
             document.getElementById('pantalla-detalle').classList.remove('hidden');
         }
 
-        // --- UTILIDADES ---
         function cerrarDetalle() { document.getElementById('pantalla-detalle').classList.add('hidden'); }
-        function toggleMenu(id) { document.getElementById(id).classList.toggle('show'); }
         function entrarApp() { 
             document.getElementById('splash-screen').style.display = 'none'; 
             document.getElementById('main-content').style.display = 'block'; 
             setTimeout(() => document.getElementById('main-content').style.opacity = '1', 50);
-            cargarJSON();
+            loadData();
         }
+        function toggleMenu(id) { document.getElementById(id).classList.toggle('show'); }
     </script>
 </body>
 </html>
