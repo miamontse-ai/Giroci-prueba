@@ -123,64 +123,40 @@
     </div>
 
     <div id="pantalla-detalle-peli" class="fixed inset-0 bg-[#0f172a] z-[2700] hidden overflow-y-auto">
-        <div class="relative w-full h-[40vh]">
+        <div class="relative w-full h-[35vh]">
             <img id="peli-banner-img" src="" class="w-full h-full object-cover">
             <div class="absolute inset-0 bg-gradient-to-t from-[#0f172a] via-transparent to-transparent"></div>
             <button onclick="cerrarDetallePeli()" class="absolute top-6 left-5 z-20 bg-black/40 backdrop-blur-md w-10 h-10 rounded-full text-white flex items-center justify-center border border-white/20"><i class="fas fa-arrow-left"></i></button>
         </div>
 
-        <div class="px-6 -mt-12 relative z-10 pb-12">
-            <h2 id="peli-titulo" class="text-3xl font-black text-white mb-6 drop-shadow-lg">Título Película</h2>
+        <div class="px-6 -mt-8 relative z-10 pb-12">
+            <h2 id="peli-titulo" class="text-4xl font-black text-white mb-4 drop-shadow-lg"></h2>
             
-            <div class="grid grid-cols-4 gap-2 mb-8">
-                <div class="bg-white/5 border border-white/10 p-2 rounded-xl text-center">
-                    <p class="text-[8px] text-gray-400 uppercase font-black mb-1">Gènere</p>
-                    <p id="peli-genero" class="text-[10px] text-cyan-400 font-bold truncate"></p>
-                </div>
-                <div class="bg-white/5 border border-white/10 p-2 rounded-xl text-center">
-                    <p class="text-[8px] text-gray-400 uppercase font-black mb-1">Durada</p>
-                    <p id="peli-duracion" class="text-[10px] text-purple-400 font-bold"></p>
-                </div>
-                <div class="bg-white/5 border border-white/10 p-2 rounded-xl text-center">
-                    <p class="text-[8px] text-gray-400 uppercase font-black mb-1">Edat</p>
-                    <p id="peli-edad" class="text-[10px] text-emerald-400 font-bold"></p>
-                </div>
-                <div class="bg-white/5 border border-white/10 p-2 rounded-xl text-center">
-                    <p class="text-[8px] text-gray-400 uppercase font-black mb-1">Preu</p>
-                    <p id="peli-precio" class="text-[10px] text-orange-400 font-bold"></p>
+            <div class="flex flex-wrap gap-x-6 gap-y-2 mb-8 text-sm font-bold uppercase tracking-wide">
+                <div class="flex items-center gap-2"><span class="text-gray-500">GÈNERE:</span><span id="peli-genero" class="text-white text-lg"></span></div>
+                <div class="flex items-center gap-2"><span class="text-gray-500">DURADA:</span><span id="peli-duracion" class="text-white text-lg"></span></div>
+                <div class="flex items-center gap-2"><span class="text-gray-500">EDAT:</span><span id="peli-edad" class="text-white text-lg"></span></div>
+            </div>
+
+            <div class="mb-10"><p id="peli-sinopsis" class="text-gray-300 text-base leading-relaxed italic"></p></div>
+
+            <div class="bg-white/5 rounded-3xl p-6 border border-white/10 mb-8">
+                <h3 class="text-cyan-400 font-black text-xs uppercase tracking-[0.2em] mb-6 flex items-center gap-2"><i class="fas fa-clock"></i> SESSIONS I HORARIS</h3>
+                <div id="contenedor-horarios" class="space-y-8">
+                    <div class="flex gap-4">
+                        <div class="w-16 shrink-0 text-center border-r border-white/10 pr-4">
+                            <p id="peli-dia-texto" class="text-white font-black text-sm uppercase">AVUI</p>
+                            <p id="peli-fecha-texto" class="text-gray-500 text-[10px]"></p>
+                        </div>
+                        <div class="flex flex-wrap gap-3" id="peli-sesiones-hoy"></div>
+                    </div>
                 </div>
             </div>
 
-            <p id="peli-sinopsis" class="text-gray-300 text-sm leading-relaxed mb-8 bg-white/5 p-4 rounded-2xl border border-white/5"></p>
-
-            <div class="space-y-4 mb-8">
-                <div class="flex items-center gap-4 bg-white/5 p-4 rounded-2xl border border-white/5">
-                    <div class="flex-1">
-                        <p class="text-[10px] text-gray-500 font-black uppercase mb-1">Dies de Projecció</p>
-                        <p id="peli-dias" class="text-white text-sm font-bold"></p>
-                    </div>
-                    <div class="flex-1">
-                        <p class="text-[10px] text-gray-500 font-black uppercase mb-1">Horaris</p>
-                        <p id="peli-horarios" class="text-white text-sm font-bold"></p>
-                    </div>
-                </div>
-
-                <div class="flex gap-2">
-                    <div id="peli-sonido-badge" class="flex-1 bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 py-2 rounded-lg text-center text-xs font-black uppercase tracking-widest">DIGITAL</div>
-                    <div id="peli-3d-badge" class="flex-1 bg-purple-500/10 border border-purple-500/30 text-purple-400 py-2 rounded-lg text-center text-xs font-black uppercase tracking-widest">3D</div>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 gap-3">
-                <button onclick="verTrailer()" class="w-full bg-slate-700 hover:bg-slate-600 text-white font-black py-4 rounded-2xl flex items-center justify-center gap-3 transition-all">
-                    <i class="fas fa-play"></i> TRÀILER
-                </button>
-                <button onclick="irACompraEntradas()" class="w-full bg-cyan-500 hover:bg-cyan-400 text-white font-black py-4 rounded-2xl flex items-center justify-center gap-3 shadow-lg shadow-cyan-500/20 transition-all">
-                    <i class="fas fa-ticket"></i> COMPRAR ENTRADES
-                </button>
-                <button onclick="verUbicacionCine()" class="w-full bg-white/5 border border-white/10 text-white font-bold py-3 rounded-2xl flex items-center justify-center gap-3 text-xs opacity-70">
-                    <i class="fas fa-location-dot"></i> COM ARRIBAR AL CINE
-                </button>
+            <div class="space-y-3">
+                <button onclick="verTrailer()" class="w-full bg-white/10 hover:bg-white/20 text-white font-black py-4 rounded-2xl flex items-center justify-center gap-3 border border-white/10"><i class="fas fa-play text-cyan-400"></i> VEURE TRÀILER</button>
+                <button onclick="irACompraEntradas()" class="w-full bg-cyan-500 text-white font-black py-5 rounded-2xl flex items-center justify-center gap-3 shadow-xl shadow-cyan-500/20 text-lg"><i class="fas fa-ticket"></i> COMPRAR ENTRADES</button>
+                <button onclick="verUbicacionCine()" class="w-full py-4 text-gray-400 font-bold flex items-center justify-center gap-2 text-xs"><i class="fas fa-map-marker-alt"></i> COM ARRIBAR AL CINE</button>
             </div>
         </div>
     </div>
@@ -217,7 +193,6 @@
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwxJoxAGAkRVvGlTQ5OQBrWc_aq15uCXjH14y5G0CmtIx_NJgCAJlUM9eeiGwFOgXBx/exec";
         let currentLang = 'ca', currentCategory = 'all', currentComarca = 'all', eventData = [], currentTicketUrl = "", currentIdDetalle = null, isCartelleraMode = false;
         let peliActualTrailer = "", peliActualCompra = "", peliActualMapa = "";
-
         let myLikes = JSON.parse(localStorage.getItem('giroci_likes') || "[]");
 
         const translations = {
@@ -288,22 +263,24 @@
         function abrirCine(nombreCine) {
             document.getElementById('cine-nombre-titulo').innerText = nombreCine;
             const grid = document.getElementById('peliculas-grid');
-            const pelisPrueba = [{ titulo: "Mufasa", poster: "https://image.tmdb.org/t/p/w500/mXpEov806uMptpE8pL9f9Q6V4tU.jpg" },{ titulo: "Gladiator II", poster: "https://image.tmdb.org/t/p/w500/6v7YvMclXUq9FqG6E7vB5EwB0V4.jpg" }];
+            const pelisPrueba = [{ titulo: "Avatar: El sentit de l'aigua", poster: "https://image.tmdb.org/t/p/w500/mXpEov806uMptpE8pL9f9Q6V4tU.jpg" },{ titulo: "Gladiator II", poster: "https://image.tmdb.org/t/p/w500/6v7YvMclXUq9FqG6E7vB5EwB0V4.jpg" }];
             grid.innerHTML = pelisPrueba.map(peli => `<div onclick="abrirDetallePeli('${peli.titulo}')" class="flex flex-col gap-2"><div class="aspect-[2/3] w-full bg-slate-700 rounded-2xl overflow-hidden shadow-lg border border-white/10"><img src="${peli.poster}" class="w-full h-full object-cover"></div><p class="text-white font-bold text-sm text-center leading-tight">${peli.titulo}</p></div>`).join('');
             document.getElementById('pantalla-peliculas').classList.remove('hidden');
         }
 
         function abrirDetallePeli(titulo) {
-            // Aquí cargaremos los datos reales del JSON de pelis en el futuro
             document.getElementById('peli-titulo').innerText = titulo;
-            document.getElementById('peli-genero').innerText = "Acció / Aventura";
-            document.getElementById('peli-duracion').innerText = "120 min";
-            document.getElementById('peli-edad').innerText = "+12";
-            document.getElementById('peli-precio').innerText = "8.50€";
-            document.getElementById('peli-sinopsis').innerText = "Exemple de sinopsi de la pel·lícula en l'idioma seleccionat...";
-            document.getElementById('peli-dias').innerText = "Dl, Dt, Dj, Ds, Dg";
-            document.getElementById('peli-horarios').innerText = "17:30, 20:00, 22:30";
+            document.getElementById('peli-genero').innerText = "Acció, Ciència ficció";
+            document.getElementById('peli-duracion').innerText = "195 min.";
+            document.getElementById('peli-edad').innerText = "12 anys";
+            document.getElementById('peli-sinopsis').innerText = "Submergeix-te en el món de Pandora una vegada més en aquesta seqüela èpica.";
             document.getElementById('peli-banner-img').src = "https://image.tmdb.org/t/p/original/mXpEov806uMptpE8pL9f9Q6V4tU.jpg";
+            document.getElementById('peli-fecha-texto').innerText = "06/01";
+
+            const contenedorHoy = document.getElementById('peli-sesiones-hoy');
+            const sesiones = [{ hora: "17:00", tipo: "DIGITAL" },{ hora: "18:30", tipo: "ATMOS" },{ hora: "21:00", tipo: "3D" }];
+            contenedorHoy.innerHTML = sesiones.map(s => `<div class="bg-white/10 border border-white/20 rounded-xl p-2 min-w-[70px] text-center"><p class="text-white font-black text-sm">${s.hora}</p><p class="text-[8px] font-black bg-black/40 text-cyan-400 rounded px-1 mt-1">${s.tipo}</p></div>`).join('');
+
             peliActualTrailer = "https://youtube.com"; peliActualCompra = "https://google.com"; peliActualMapa = "Girona";
             document.getElementById('pantalla-detalle-peli').classList.remove('hidden');
         }
