@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GirOci - Master Blindado</title>
+    <title>GirOci</title>
     <link rel="manifest" href="manifest.json?v=12">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -42,13 +42,12 @@
         }
         .flag-icon { width: 22px; height: 15px; object-fit: cover; border-radius: 2px; }
 
-        /* Estilo Botones de Cine */
         .cine-card-btn { 
             background: white; border-radius: 20px; padding: 22px; 
             margin-bottom: 12px; width: 100%; color: #1e5d8a; 
             font-weight: 900; font-size: 1.2rem; display: flex; 
             justify-content: space-between; align-items: center;
-            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.1); border: none;
         }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
@@ -62,7 +61,7 @@
 
     <div id="main-content">
         <div id="top-header" class="flex justify-between items-center mb-2 px-1 relative">
-            <button id="btn-back-nav" onclick="control NavegacionAtras()" class="hidden w-10 h-10 bg-black/20 backdrop-blur-md rounded-xl text-white flex items-center justify-center border border-white/20">
+            <button id="btn-back-nav" onclick="controlNavegacionAtras()" class="hidden w-10 h-10 bg-black/20 backdrop-blur-md rounded-xl text-white flex items-center justify-center border border-white/20">
                 <i class="fas fa-arrow-left"></i>
             </button>
             <button id="btn-share-main" onclick="compartirApp()" class="w-10 h-10 bg-white/20 backdrop-blur-md rounded-xl border border-white/30 text-white flex items-center justify-center">
@@ -74,8 +73,11 @@
                     <span id="selected-lang-content" class="flex items-center gap-2"><img src="bandera_ca.png" class="flag-icon"> CAT</span>
                 </div>
                 <div class="options-menu !w-[130px] !right-0 !left-auto" id="langMenu">
-                    <div class="option-item" onclick="selectLang('ca', 'bandera_ca.png', 'CAT')">CAT</div>
-                    <div class="option-item" onclick="selectLang('es', 'bandera_es.png', 'ESP')">ESP</div>
+                    <div class="option-item" onclick="selectLang('ca', 'bandera_ca.png', 'CAT')"><img src="bandera_ca.png" class="flag-icon"> CAT</div>
+                    <div class="option-item" onclick="selectLang('es', 'bandera_es.png', 'ESP')"><img src="bandera_es.png" class="flag-icon"> ESP</div>
+                    <div class="option-item" onclick="selectLang('en', 'bandera_en.png', 'ENG')"><img src="bandera_en.png" class="flag-icon"> ENG</div>
+                    <div class="option-item" onclick="selectLang('fr', 'bandera_fr.png', 'FRA')"><img src="bandera_fr.png" class="flag-icon"> FRA</div>
+                    <div class="option-item" onclick="selectLang('de', 'bandera_de.png', 'GER')"><img src="bandera_de.png" class="flag-icon"> GER</div>
                 </div>
             </div>
         </div>
@@ -110,6 +112,9 @@
         <div class="relative w-full h-[35vh] bg-black flex items-center justify-center">
             <img id="img-det" src="" class="h-full w-auto object-contain">
             <button onclick="cerrarDetalle()" class="absolute top-6 left-5 bg-black/30 w-10 h-10 rounded-full text-white flex items-center justify-center"><i class="fas fa-arrow-left"></i></button>
+            <button id="btn-like-det" onclick="toggleLikeActual()" class="absolute top-6 right-5 bg-white/20 backdrop-blur-md w-12 h-12 rounded-full text-white flex items-center justify-center border border-white/30 text-xl transition-all active:scale-125">
+                <i class="far fa-heart"></i>
+            </button>
         </div>
         <div class="p-6">
             <h2 id="titulo-det" class="text-3xl font-black text-white mb-6"></h2>
@@ -118,30 +123,40 @@
                 <div class="bg-white/10 p-3 rounded-xl"><p class="text-gray-400 font-bold uppercase">Preu</p><p id="precio-det" class="text-orange-400 font-black"></p></div>
             </div>
             <p id="desc-det" class="text-gray-300 leading-relaxed mb-10"></p>
-            <button id="btn-reserva" onclick="" class="w-full bg-cyan-500 text-white py-5 rounded-2xl font-black uppercase text-lg">Reservar Entrades</button>
+            <button id="btn-reserva" class="w-full bg-cyan-500 text-white py-5 rounded-2xl font-black uppercase text-lg shadow-xl">Reservar Entrades</button>
         </div>
     </div>
 
     <script>
-        let eventData = [], cineData = [], currentLang = 'ca', vistaActual = 'home';
+        let eventData = [], cineData = [], currentLang = 'ca', vistaActual = 'home', currentIdDetalle = null, currentTipoDetalle = null;
+        let myLikes = JSON.parse(localStorage.getItem('giroci_likes') || "[]");
 
         async function loadData() {
-            const [re, rc] = await Promise.all([fetch('eventos.json'), fetch('cine.json')]);
-            eventData = await re.json(); cineData = await rc.json();
-            renderEvents(eventData, 'event');
+            try {
+                const [re, rc] = await Promise.all([fetch('eventos.json'), fetch('cine.json')]);
+                eventData = await re.json(); cineData = await rc.json();
+                renderEvents(eventData, 'event');
+            } catch (e) { console.error(e); }
         }
 
-        // --- FLUJO DE CINE SIN TOCAR DISEÑO ---
+        function renderEvents(data, tipo) {
+            const grid = document.getElementById('events-grid');
+            grid.innerHTML = data.map(item => `
+                <div onclick="abrirDetalle(${item.ID}, '${tipo}')" class="bg-white rounded-2xl overflow-hidden shadow-xl active:scale-95 transition-all cursor-pointer">
+                    <img src="${item.Imagen_URL}" class="h-40 w-full object-cover">
+                    <div class="p-3"><h3 class="font-bold text-sm text-gray-800 leading-tight">${item.TITULO || item.Titulo_CA}</h3></div>
+                </div>`).join('');
+        }
+
         function mostrarListaCines() {
             vistaActual = 'cines';
             document.getElementById('controles-ocio').classList.add('hidden');
             document.getElementById('btn-share-main').classList.add('hidden');
             document.getElementById('btn-back-nav').classList.remove('hidden');
             document.getElementById('txt-events-title').innerText = "Selecciona un Cine";
-            
             const cines = [...new Set(cineData.map(c => c.CINE))];
             const grid = document.getElementById('events-grid');
-            grid.className = "flex flex-col gap-2 mb-10"; // Cambiamos a lista para los botones de cine
+            grid.className = "flex flex-col gap-2 mb-10";
             grid.innerHTML = cines.map(c => `<button onclick="mostrarCartelera('${c}')" class="cine-card-btn"><span>${c}</span><i class="fas fa-chevron-right opacity-30"></i></button>`).join('');
         }
 
@@ -150,7 +165,7 @@
             document.getElementById('txt-events-title').innerText = cine;
             const pelis = cineData.filter(p => p.CINE === cine);
             const grid = document.getElementById('events-grid');
-            grid.className = "grid grid-cols-2 gap-4 mb-10"; // Volvemos a rejilla para los carteles
+            grid.className = "grid grid-cols-2 gap-4 mb-10";
             renderEvents(pelis, 'cine');
         }
 
@@ -167,16 +182,8 @@
             }
         }
 
-        function renderEvents(data, tipo) {
-            const grid = document.getElementById('events-grid');
-            grid.innerHTML = data.map(item => `
-                <div onclick="abrirDetalle(${item.ID}, '${tipo}')" class="bg-white rounded-2xl overflow-hidden shadow-xl active:scale-95 transition-all cursor-pointer">
-                    <img src="${item.Imagen_URL}" class="h-40 w-full object-cover">
-                    <div class="p-3"><h3 class="font-bold text-sm text-gray-800 leading-tight">${item.TITULO || item.Titulo_CA}</h3></div>
-                </div>`).join('');
-        }
-
         function abrirDetalle(id, tipo) {
+            currentIdDetalle = id; currentTipoDetalle = tipo;
             const db = (tipo === 'cine') ? cineData : eventData;
             const item = db.find(x => x.ID == id);
             document.getElementById('titulo-det').innerText = item.TITULO || item.Titulo_CA;
@@ -185,7 +192,29 @@
             document.getElementById('desc-det').innerText = item.SINOPSIS_ES || item.Desc_CA;
             document.getElementById('img-det').src = item.Imagen_URL;
             document.getElementById('btn-reserva').onclick = () => window.open(item.LINK_RESERVA || item.Link_Entradas, '_blank');
+            actualizarIconoLike();
             document.getElementById('pantalla-detalle').classList.remove('hidden');
+        }
+
+        function toggleLikeActual() {
+            const key = `${currentTipoDetalle}_${currentIdDetalle}`;
+            if(myLikes.includes(key)) myLikes = myLikes.filter(k => k !== key);
+            else myLikes.push(key);
+            localStorage.setItem('giroci_likes', JSON.stringify(myLikes));
+            actualizarIconoLike();
+        }
+
+        function actualizarIconoLike() {
+            const key = `${currentTipoDetalle}_${currentIdDetalle}`;
+            const icon = document.querySelector('#btn-like-det i');
+            if(myLikes.includes(key)) { icon.className = 'fas fa-heart text-red-500'; }
+            else { icon.className = 'far fa-heart'; }
+        }
+
+        function selectLang(l, f, lbl) { 
+            currentLang = l; 
+            document.getElementById('selected-lang-content').innerHTML = `<img src="${f}" class="flag-icon"> ${lbl}`; 
+            toggleMenu('langMenu'); 
         }
 
         function cerrarDetalle() { document.getElementById('pantalla-detalle').classList.add('hidden'); }
@@ -196,6 +225,7 @@
             loadData();
         }
         function toggleMenu(id) { document.getElementById(id).classList.toggle('show'); }
+        function compartirApp() { if (navigator.share) { navigator.share({ title: 'GirOci', url: window.location.href }); } }
     </script>
 </body>
 </html>
