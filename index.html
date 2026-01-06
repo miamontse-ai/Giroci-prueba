@@ -145,8 +145,8 @@
                 <div id="contenedor-horarios" class="space-y-8">
                     <div class="flex gap-4">
                         <div class="w-16 shrink-0 text-center border-r border-white/10 pr-4">
-                            <p id="peli-dia-texto" class="text-white font-black text-sm uppercase">AVUI</p>
-                            <p id="peli-fecha-texto" class="text-gray-500 text-[10px]"></p>
+                            <p class="text-white font-black text-sm uppercase">AVUI</p>
+                            <p id="peli-fecha-hoy" class="text-gray-500 text-[10px]">06/01</p>
                         </div>
                         <div class="flex flex-wrap gap-3" id="peli-sesiones-hoy"></div>
                     </div>
@@ -273,9 +273,8 @@
             document.getElementById('peli-genero').innerText = "Acció, Ciència ficció";
             document.getElementById('peli-duracion').innerText = "195 min.";
             document.getElementById('peli-edad').innerText = "12 anys";
-            document.getElementById('peli-sinopsis').innerText = "Submergeix-te en el món de Pandora una vegada més en aquesta seqüela èpica.";
+            document.getElementById('peli-sinopsis').innerText = "Avatar: El sentit de l'aigua arriba als cinemes amb una experiència visual sense precedents...";
             document.getElementById('peli-banner-img').src = "https://image.tmdb.org/t/p/original/mXpEov806uMptpE8pL9f9Q6V4tU.jpg";
-            document.getElementById('peli-fecha-texto').innerText = "06/01";
 
             const contenedorHoy = document.getElementById('peli-sesiones-hoy');
             const sesiones = [{ hora: "17:00", tipo: "DIGITAL" },{ hora: "18:30", tipo: "ATMOS" },{ hora: "21:00", tipo: "3D" }];
@@ -289,7 +288,7 @@
         function cerrarDetallePeli() { document.getElementById('pantalla-detalle-peli').classList.add('hidden'); }
         function verTrailer() { if(peliActualTrailer) window.open(peliActualTrailer, '_blank'); }
         function irACompraEntradas() { if(peliActualCompra) window.open(peliActualCompra, '_blank'); }
-        function verUbicacionCine() { window.open(`http://maps.google.com/?q=${encodeURIComponent(peliActualMapa)}`, '_blank'); }
+        function verUbicacionCine() { if(peliActualMapa) window.open('https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(peliActualMapa), '_blank'); }
 
         function abrirDetalle(id) {
             const ev = eventData.find(e => String(e.ID) === String(id)); if(!ev) return;
@@ -314,7 +313,7 @@
         function toggleLikeActual() { const idStr = String(currentIdDetalle); if(myLikes.includes(idStr)) { myLikes = myLikes.filter(id => id !== idStr); } else { myLikes.push(idStr); } localStorage.setItem('giroci_likes', JSON.stringify(myLikes)); updateLikeVisual(); renderEvents(); }
         function updateLikeVisual() { const isFav = myLikes.includes(String(currentIdDetalle)); const btn = document.getElementById('btn-like-det'), icon = btn.querySelector('i'); if(isFav) { icon.className = "fas fa-heart text-red-500"; btn.classList.add('bg-white'); } else { icon.className = "far fa-heart text-white"; btn.classList.remove('bg-white'); } }
         function toggleMenu(id) { const m = document.getElementById(id), v = m.classList.contains('show'); document.querySelectorAll('.options-menu').forEach(x => x.classList.remove('show')); if(!v) m.classList.add('show'); }
-        function abrirMapa() { window.open(`http://maps.google.com/?q=${encodeURIComponent(document.getElementById('direccion-det').innerText)}`, '_blank'); }
+        function abrirMapa() { const loc = document.getElementById('direccion-det').innerText; if(loc) window.open('https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(loc), '_blank'); }
         function cerrarDetalle() { document.getElementById('pantalla-detalle').classList.add('hidden'); }
         function irAReserva() { if(currentTicketUrl) window.open(currentTicketUrl, '_blank'); }
         function entrarApp() { document.getElementById('splash-screen').style.opacity = '0'; setTimeout(() => { document.getElementById('splash-screen').style.display = 'none'; document.getElementById('main-content').style.display = 'block'; setTimeout(() => document.getElementById('main-content').style.opacity = '1', 50); loadData(); }, 600); }
