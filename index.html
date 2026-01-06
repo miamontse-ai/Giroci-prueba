@@ -12,17 +12,41 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         body { background: linear-gradient(180deg, #38b6ff 0%, #43e97b 100%); min-height: 100vh; font-family: 'ui-sans-serif', system-ui, -apple-system, sans-serif; margin: 0; overflow-x: hidden; }
+        
+        /* Splash Screen */
         #splash-screen { position: fixed; inset: 0; width: 100vw; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: space-around; z-index: 3000; background: linear-gradient(180deg, #38b6ff 0%, #43e97b 100%); transition: all 0.6s ease; padding: 2rem 0; }
         .logo-splash { width: 95%; max-width: 550px; filter: drop-shadow(0 20px 40px rgba(0,0,0,0.3)); }
         .btn-entrar { background: white; color: #1e5d8a; padding: 20px 70px; border-radius: 50px; font-weight: 900; font-size: 1.5rem; box-shadow: 0 10px 30px rgba(0,0,0,0.25); cursor: pointer; border: none; }
+
         #main-content { display: none; opacity: 0; transition: opacity 0.5s ease; padding: 10px 15px; max-width: 500px; margin: 0 auto; }
+
+        /* --- SELECTORES BLINDADOS --- */
         .custom-select { position: relative; user-select: none; }
-        .select-trigger { background: #1e5d8a; border-radius: 20px; padding: 14px 18px; color: white; display: flex; align-items: center; justify-content: space-between; font-weight: 800; font-size: 15px; cursor: pointer; box-shadow: 0 10px 20px rgba(0,0,0,0.15); }
-        .options-menu { position: absolute; top: 110%; left: 0; right: 0; background: rgba(255, 255, 255, 0.75); backdrop-filter: blur(15px); border-radius: 24px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2); display: none; z-index: 2000; overflow-y: auto; max-height: 400px; padding: 10px; border: 1px solid rgba(255, 255, 255, 0.4); }
+        .select-trigger { 
+            background: #1e5d8a; border-radius: 20px; padding: 14px 18px; 
+            color: white; display: flex; align-items: center; justify-content: space-between; 
+            font-weight: 800; font-size: 15px; cursor: pointer; box-shadow: 0 10px 20px rgba(0,0,0,0.15); 
+        }
+        
+        .options-menu { 
+            position: absolute; top: 110%; left: 0; right: 0;
+            background: rgba(255, 255, 255, 0.75); backdrop-filter: blur(15px); 
+            border-radius: 24px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2); 
+            display: none; z-index: 2000; overflow-y: auto; max-height: 400px; 
+            padding: 10px; border: 1px solid rgba(255, 255, 255, 0.4);
+        }
         .options-menu.show { display: block; animation: fadeIn 0.2s ease-out; }
-        .option-item { padding: 14px 16px; display: flex; align-items: center; gap: 14px; color: #1e293b; font-size: 16px; cursor: pointer; font-weight: 700; border-radius: 15px; transition: background 0.2s; }
+        
+        .option-item { 
+            padding: 14px 16px; display: flex; align-items: center; gap: 14px; 
+            color: #1e293b; font-size: 16px; cursor: pointer; font-weight: 700; 
+            border-radius: 15px; transition: background 0.2s;
+        }
+        .option-item:active, .option-item:hover { background: rgba(255, 255, 255, 0.5); color: #000; }
+        
         .flag-icon { width: 22px; height: 15px; object-fit: cover; border-radius: 2px; }
         .skeleton { background: rgba(255,255,255,0.2); border-radius: 1.5rem; height: 180px; position: relative; overflow: hidden; }
+
         @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
@@ -34,7 +58,10 @@
 
     <div id="main-content">
         <div id="top-header" class="flex justify-between items-center mb-2 px-1 relative">
-            <button onclick="compartirApp()" class="w-10 h-10 bg-white/20 backdrop-blur-md rounded-xl border border-white/30 text-white flex items-center justify-center active:scale-90 transition-all shadow-lg"><i class="fas fa-share-nodes"></i></button>
+            <button onclick="compartirApp()" class="w-10 h-10 bg-white/20 backdrop-blur-md rounded-xl border border-white/30 text-white flex items-center justify-center active:scale-90 transition-all shadow-lg">
+                <i class="fas fa-share-nodes"></i>
+            </button>
+
             <div class="custom-select w-[110px]" id="langSelect">
                 <div class="select-trigger !py-2 !px-3 !rounded-xl !bg-white/20 !backdrop-blur-md !border-white/30" onclick="toggleMenu('langMenu')">
                     <span id="selected-lang-content" class="flex items-center gap-2"><img src="bandera_ca.png" class="flag-icon"> CAT</span>
@@ -49,7 +76,9 @@
         </div>
 
         <div id="cine-header" class="hidden mb-2 px-1">
-            <button onclick="activarCartellera()" class="w-10 h-10 bg-white/20 backdrop-blur-md rounded-xl border border-white/30 text-white flex items-center justify-center active:scale-90 transition-all shadow-lg"><i class="fas fa-arrow-left"></i></button>
+            <button onclick="activarCartellera()" class="w-10 h-10 bg-white/20 backdrop-blur-md rounded-xl border border-white/30 text-white flex items-center justify-center active:scale-90 transition-all shadow-lg">
+                <i class="fas fa-arrow-left"></i>
+            </button>
         </div>
 
         <div class="flex items-center justify-center gap-2 mb-6 px-2">
@@ -62,9 +91,20 @@
                 <i class="fas fa-film text-cyan-300"></i>
                 <span id="txt-cartellera">CARTELLERA DE CINE</span>
             </div>
+
             <div class="flex gap-2">
-                <div class="custom-select flex-1" id="typeSelect"><div class="select-trigger" onclick="toggleMenu('typeMenu')"><div class="flex items-center gap-2"><i id="icon-filter-type" class="fas fa-list text-cyan-300"></i> <span id="txt-filter-type">Tipus d'Oci</span></div></div><div class="options-menu" id="typeMenu"></div></div>
-                <div class="custom-select flex-1" id="comarcaSelect"><div class="select-trigger" onclick="toggleMenu('comarcaMenu')"><div class="flex items-center gap-2"><i class="fas fa-map-marker-alt text-cyan-300"></i> <span id="txt-filter-comarca">Comarca</span></div></div><div class="options-menu" id="comarcaMenu"></div></div>
+                <div class="custom-select flex-1" id="typeSelect">
+                    <div class="select-trigger" onclick="toggleMenu('typeMenu')">
+                        <div class="flex items-center gap-2"><i id="icon-filter-type" class="fas fa-list text-cyan-300"></i> <span id="txt-filter-type">Tipus d'Oci</span></div>
+                    </div>
+                    <div class="options-menu" id="typeMenu"></div>
+                </div>
+                <div class="custom-select flex-1" id="comarcaSelect">
+                    <div class="select-trigger" onclick="toggleMenu('comarcaMenu')">
+                        <div class="flex items-center gap-2"><i class="fas fa-map-marker-alt text-cyan-300"></i> <span id="txt-filter-comarca">Comarca</span></div>
+                    </div>
+                    <div class="options-menu" id="comarcaMenu"></div>
+                </div>
             </div>
         </div>
 
@@ -91,9 +131,18 @@
             <h2 id="peli-titulo" class="text-4xl font-black text-white mb-8 drop-shadow-lg"></h2>
             
             <div class="flex flex-wrap gap-x-12 gap-y-4 mb-8">
-                <div class="flex flex-col"><span class="text-white text-xs font-black uppercase tracking-widest mb-1">GÈNERE</span><span id="peli-genero" class="text-gray-400 text-sm font-bold"></span></div>
-                <div class="flex flex-col"><span class="text-white text-xs font-black uppercase tracking-widest mb-1">DURADA</span><span id="peli-duracion" class="text-gray-400 text-sm font-bold"></span></div>
-                <div class="flex flex-col"><span class="text-white text-xs font-black uppercase tracking-widest mb-1">EDAT</span><span id="peli-edad" class="text-gray-400 text-sm font-bold"></span></div>
+                <div class="flex flex-col">
+                    <span class="text-white text-xs font-black uppercase tracking-widest mb-1">GÈNERE</span>
+                    <span id="peli-genero" class="text-gray-400 text-sm font-bold"></span>
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-white text-xs font-black uppercase tracking-widest mb-1">DURADA</span>
+                    <span id="peli-duracion" class="text-gray-400 text-sm font-bold"></span>
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-white text-xs font-black uppercase tracking-widest mb-1">EDAT</span>
+                    <span id="peli-edad" class="text-gray-400 text-sm font-bold"></span>
+                </div>
             </div>
 
             <div class="mb-10"><p id="peli-sinopsis" class="text-gray-300 text-base leading-relaxed italic"></p></div>
@@ -112,15 +161,15 @@
             </div>
 
             <div class="flex gap-3">
-                <button onclick="verTrailer()" class="flex-1 bg-white/10 hover:bg-white/20 text-white font-black py-4 rounded-2xl flex items-center justify-center gap-2 border border-white/10 text-xs tracking-tighter">
-                    <i class="fas fa-play text-cyan-400"></i> VEURE TRÀILER
+                <button onclick="verTrailer()" class="flex-1 bg-white/10 hover:bg-white/20 text-white font-black py-4 rounded-2xl flex items-center justify-center gap-2 border border-white/10 text-[10px] tracking-tighter uppercase">
+                    <i class="fas fa-play text-cyan-400"></i> Veure Tràiler
                 </button>
-                <button onclick="irACompraEntradas()" class="flex-[2] bg-cyan-500 text-white font-black py-4 rounded-2xl flex items-center justify-center gap-2 shadow-xl shadow-cyan-500/20 text-xs tracking-tighter">
-                    <i class="fas fa-ticket"></i> COMPRAR ENTRADES
+                <button onclick="irACompraEntradas()" class="flex-[2] bg-cyan-500 text-white font-black py-4 rounded-2xl flex items-center justify-center gap-2 shadow-xl shadow-cyan-500/20 text-[10px] tracking-tighter uppercase">
+                    <i class="fas fa-ticket"></i> Comprar Entrades
                 </button>
             </div>
             <button onclick="verUbicacionCine()" class="w-full mt-4 py-4 text-gray-400 font-bold flex items-center justify-center gap-2 text-[10px] uppercase tracking-widest opacity-60">
-                <i class="fas fa-map-marker-alt"></i> COM ARRIBAR AL CINE
+                <i class="fas fa-map-marker-alt"></i> Com arribar al Cine
             </button>
         </div>
     </div>
@@ -150,7 +199,7 @@
 
     <script>
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwxJoxAGAkRVvGlTQ5OQBrWc_aq15uCXjH14y5G0CmtIx_NJgCAJlUM9eeiGwFOgXBx/exec";
-        let currentLang = 'ca', eventData = [], currentTicketUrl = "", currentIdDetalle = null, isCartelleraMode = false;
+        let currentLang = 'ca', currentCategory = 'all', currentComarca = 'all', eventData = [], currentTicketUrl = "", currentIdDetalle = null, isCartelleraMode = false;
         let peliActualTrailer = "", peliActualCompra = "", peliActualMapa = "";
         let myLikes = JSON.parse(localStorage.getItem('giroci_likes') || "[]");
 
@@ -160,6 +209,13 @@
             en: { filterType: "Leisure Type", comarca: "County", title: "Upcoming Events", all: "All", share: "Check out this Girona Leisure App: ", cartellera: "CINEMA LISTINGS", cineTitle: "Cinemas" }
         };
 
+        const categoryNames = {
+            gastronomia: { icon: "fa-utensils", iconColor: "#ff4d4d", ca: "Gastronomia", es: "Gastronomía", en: "Gastronomy" },
+            conciertos: { icon: "fa-guitar", iconColor: "#f43f5e", ca: "Concerts", es: "Conciertos", en: "Concerts" },
+            actividades: { icon: "fa-palette", iconColor: "#06b6d4", ca: "Activitats", es: "Actividades", en: "Activities" }
+        };
+
+        const comarcasNormales = ["Alt Empordà", "Baix Empordà", "Cerdanya", "Garrotxa", "Gironès", "Pla de l'Estany", "Ripollès", "Selva"];
         const cinesListaDefinitiva = [{ nombre: "Ocine Girona", loc: "Girona" },{ nombre: "Odeon Girona", loc: "Salt" },{ nombre: "Ocine Blanes", loc: "Blanes" },{ nombre: "Ocine Platja d'Aro", loc: "Platja d'Aro" },{ nombre: "Multicines Olot", loc: "Olot" },{ nombre: "Cat Cinemes", loc: "Figueres" }];
 
         async function loadData() {
@@ -183,7 +239,11 @@
                 grid.innerHTML = cinesListaDefinitiva.map(cine => `<div onclick="abrirCine('${cine.nombre}')" class="bg-white/20 backdrop-blur-md border border-white/30 rounded-2xl p-4 flex items-center justify-between text-white shadow-lg active:scale-95 transition-all cursor-pointer"><div class="flex items-center gap-4"><div class="w-10 h-10 bg-white/30 rounded-full flex items-center justify-center"><i class="fas fa-film"></i></div><div><p class="font-black text-lg">${cine.nombre}</p><p class="text-[10px] opacity-70 uppercase tracking-widest">${cine.loc}</p></div></div><i class="fas fa-chevron-right opacity-40"></i></div>`).join('');
                 return;
             }
-            grid.innerHTML = eventData.filter(ev => ev.Categoria.toLowerCase() !== 'cine').map(ev => `<div onclick="abrirDetalle('${ev.ID}')" class="bg-white rounded-[1.5rem] overflow-hidden shadow-xl active:scale-95 transition-all cursor-pointer relative">${myLikes.includes(String(ev.ID)) ? '<div class="absolute top-2 right-2 z-10 text-red-500 bg-white/80 w-6 h-6 rounded-full flex items-center justify-center text-[10px] shadow-sm"><i class="fas fa-heart"></i></div>' : ''}<img src="${ev.Imagen_URL}" class="h-32 w-full object-cover"><div class="p-3"><h3 class="font-bold text-[13px] text-gray-800 leading-tight">${ev['Titulo_'+currentLang.toUpperCase()] || ev.Titulo_CAT}</h3><p class="text-[10px] text-gray-400 mt-1 uppercase font-bold">${ev.Municipio}</p></div></div>`).join('');
+            let filtered = eventData.filter(ev => ev.Categoria.toLowerCase() !== 'cine');
+            if(currentCategory !== 'all') filtered = filtered.filter(ev => ev.Categoria.toLowerCase() === currentCategory);
+            if(currentComarca !== 'all') filtered = filtered.filter(ev => ev.Comarca === currentComarca);
+            
+            grid.innerHTML = filtered.map(ev => `<div onclick="abrirDetalle('${ev.ID}')" class="bg-white rounded-[1.5rem] overflow-hidden shadow-xl active:scale-95 transition-all cursor-pointer relative">${myLikes.includes(String(ev.ID)) ? '<div class="absolute top-2 right-2 z-10 text-red-500 bg-white/80 w-6 h-6 rounded-full flex items-center justify-center text-[10px] shadow-sm"><i class="fas fa-heart"></i></div>' : ''}<img src="${ev.Imagen_URL}" class="h-32 w-full object-cover"><div class="p-3"><h3 class="font-bold text-[13px] text-gray-800 leading-tight">${ev['Titulo_'+currentLang.toUpperCase()] || ev.Titulo_CAT}</h3><p class="text-[10px] text-gray-400 mt-1 uppercase font-bold">${ev.Municipio}</p></div></div>`).join('');
         }
 
         function abrirCine(nombre) {
@@ -210,7 +270,8 @@
         function cerrarDetallePeli() { document.getElementById('pantalla-detalle-peli').classList.add('hidden'); }
         function verTrailer() { window.open(peliActualTrailer, '_blank'); }
         function irACompraEntradas() { window.open(peliActualCompra, '_blank'); }
-        function verUbicacionCine() { window.open('https://www.google.com/maps/search/' + encodeURIComponent(peliActualMapa), '_blank'); }
+        function verUbicacionCine() { window.open('https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(peliActualMapa), '_blank'); }
+        
         function abrirDetalle(id) {
             const ev = eventData.find(e => String(e.ID) === String(id)); if(!ev) return;
             currentIdDetalle = id; document.getElementById('titulo-det').innerText = ev['Titulo_'+currentLang.toUpperCase()] || ev.Titulo_CAT;
@@ -223,15 +284,30 @@
         }
 
         function toggleMenu(id) { const m = document.getElementById(id), v = m.classList.contains('show'); document.querySelectorAll('.options-menu').forEach(x => x.classList.remove('show')); if(!v) m.classList.add('show'); }
-        function selectLang(l, f, lbl) { currentLang = l; document.getElementById('selected-lang-content').innerHTML = `<img src="${f}" class="flag-icon"> ${lbl}`; toggleMenu('langMenu'); renderEvents(); }
+        function selectLang(l, f, lbl) { currentLang = l; document.getElementById('selected-lang-content').innerHTML = `<img src="${f}" class="flag-icon"> ${lbl}`; toggleMenu('langMenu'); renderEvents(); updateStaticTexts(); }
+        function updateStaticTexts() { document.getElementById('txt-filter-type').innerText = translations[currentLang].filterType; document.getElementById('txt-filter-comarca').innerText = translations[currentLang].comarca; document.getElementById('txt-events-title').innerText = isCartelleraMode ? translations[currentLang].cineTitle : translations[currentLang].title; document.getElementById('txt-cartellera').innerText = translations[currentLang].cartellera; }
+        
+        function selectCategory(cat) { currentCategory = cat; const catData = categoryNames[cat]; document.getElementById('txt-filter-type').innerText = cat === 'all' ? translations[currentLang].all : catData[currentLang]; document.getElementById('icon-filter-type').className = cat === 'all' ? "fas fa-list text-cyan-300" : `fas ${catData.icon}`; document.getElementById('icon-filter-type').style.color = cat === 'all' ? "#67e8f9" : catData.iconColor; toggleMenu('typeMenu'); renderEvents(); }
+        function selectComarca(com) { currentComarca = com; document.getElementById('txt-filter-comarca').innerText = com === 'all' ? translations[currentLang].all : com; toggleMenu('comarcaMenu'); renderEvents(); }
+        
+        function renderCategories() {
+            let h = `<div class="option-item" onclick="selectCategory('all')"><i class="fas fa-list"></i> ${translations[currentLang].all}</div>`;
+            Object.keys(categoryNames).forEach(cat => { const c = categoryNames[cat]; h += `<div class="option-item" onclick="selectCategory('${cat}')"><i class="fas ${c.icon}" style="color:${c.iconColor}"></i> ${c[currentLang]}</div>`; });
+            document.getElementById('typeMenu').innerHTML = h;
+        }
+
+        function renderComarcas() {
+            let h = `<div class="option-item" onclick="selectComarca('all')"><i class="fas fa-map-marker-alt"></i> ${translations[currentLang].all}</div>`;
+            comarcasNormales.forEach(com => { h += `<div class="option-item" onclick="selectComarca('${com}')">${com}</div>`; });
+            document.getElementById('comarcaMenu').innerHTML = h;
+        }
+
         function cerrarDetalle() { document.getElementById('pantalla-detalle').classList.add('hidden'); }
         function entrarApp() { document.getElementById('splash-screen').style.opacity = '0'; setTimeout(() => { document.getElementById('splash-screen').style.display = 'none'; document.getElementById('main-content').style.display = 'block'; setTimeout(() => document.getElementById('main-content').style.opacity = '1', 50); loadData(); }, 600); }
-        function abrirMapa() { const loc = document.getElementById('direccion-det').innerText; window.open('https://www.google.com/maps/search/' + encodeURIComponent(loc), '_blank'); }
+        function abrirMapa() { const loc = document.getElementById('direccion-det').innerText; window.open('https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(loc), '_blank'); }
         function irAReserva() { if(currentTicketUrl) window.open(currentTicketUrl, '_blank'); }
         function updateLikeVisual() { const isFav = myLikes.includes(String(currentIdDetalle)); const icon = document.querySelector('#btn-like-det i'); icon.className = isFav ? "fas fa-heart text-red-500" : "far fa-heart text-white"; }
         function toggleLikeActual() { const idStr = String(currentIdDetalle); if(myLikes.includes(idStr)) myLikes = myLikes.filter(i => i !== idStr); else myLikes.push(idStr); localStorage.setItem('giroci_likes', JSON.stringify(myLikes)); updateLikeVisual(); renderEvents(); }
-        function renderCategories() { let h = `<div class="option-item" onclick="toggleMenu('typeMenu')">Tots</div>`; document.getElementById('typeMenu').innerHTML = h; }
-        function renderComarcas() { let h = `<div class="option-item" onclick="toggleMenu('comarcaMenu')">Totes</div>`; document.getElementById('comarcaMenu').innerHTML = h; }
         function compartirApp() { window.open(`https://wa.me/?text=${encodeURIComponent(translations[currentLang].share + window.location.href)}`, '_blank'); }
     </script>
 </body>
