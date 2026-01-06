@@ -152,7 +152,7 @@
             ca: { filterType: "Tipus d'Oci", comarca: "Comarca", cineType: "Cines", cineLoc: "Ubicació", title: "Esdeveniments Propers", place: "Lloc", date: "Data", price: "Preu", time: "Hora", all: "Tots", share: "Mira aquesta App d'oci a Girona: ", cartellera: "CARTELLERA DE CINE", cineTitle: "Cartellera de Cine" },
             es: { filterType: "Tipo de Ocio", comarca: "Comarca", cineType: "Cines", cineLoc: "Ubicación", title: "Próximos Eventos", place: "Lugar", date: "Fecha", price: "Precio", time: "Hora", all: "Todos", share: "Mira esta App de ocio en Girona: ", cartellera: "CARTELERA DE CINE", cineTitle: "Cartelera de Cine" },
             en: { filterType: "Leisure Type", comarca: "County", cineType: "Cinemas", cineLoc: "Location", title: "Upcoming Events", place: "Location", date: "Date", price: "Price", time: "Time", all: "All", share: "Check out this Girona Leisure App: ", cartellera: "CINEMA LISTINGS", cineTitle: "Cinema Listings" },
-            fr: { filterType: "Loisirs", comarca: "Arrondissement", cineType: "Cinémas", cineLoc: "Emplacement", title: "Prochains Événements", place: "Lieu", date: "Date", price: "Prix", time: "Heure", all: "Tous", share: "Découvrez cette application de loisirs à Gérone: ", cartellera: "CINÉMA", cineTitle: "Programme Cinéma" },
+            fr: { filterType: "Loisirs", comarca: "Arrondissement", cineType: "Cinémas", cineLoc: "Emplacement", title: "Prochains Événements", place: "Lieu", date: "Date", price: "Prix", time: "Heure", all: "Tous", share: "Découvrez esta aplicación de loisirs à Gérone: ", cartellera: "CINÉMA", cineTitle: "Programme Cinéma" },
             de: { filterType: "Freizeit", comarca: "Landkreis", cineType: "Kinos", cineLoc: "Standort", title: "Kommende Events", place: "Ort", date: "Datum", price: "Preis", time: "Zeit", all: "Alle", share: "Schau dir diese Freizeit-App für Girona an: ", cartellera: "KINO", cineTitle: "Kinoprogramm" }
         };
 
@@ -170,7 +170,13 @@
 
         const comarcasNormales = ["Alt Empordà", "Baix Empordà", "Cerdanya", "Garrotxa", "Gironès", "Pla de l'Estany", "Ripollès", "Selva"];
         const ubicacionesCine = ["Girona", "Blanes", "Figueres", "Olot", "Palamós", "Platja d'Aro", "Ripoll", "Roses", "Salt", "Begur", "Torroella de Montgrí"];
-        const cinesLista = ["Cinema Truffaut", "Cinemes Albeniz", "Ocine Girona", "Ocine Blanes", "Cinemes Olot", "Cinema Arinco", "Cinema Kyton", "Ocine Platja d'Aro", "Cinema Teatre Comtal", "Cinemes Roses", "Odeón Girona Multicines", "Cinema Casino Cultural", "Cinema Montgri"];
+        
+        // LISTA DE CINES PROPORCIONADA
+        const cinesLista = [
+            "Ocine Girona", "Odeon Girona", "Ocine Blanes", "Ocine Platja d'Aro", "Multicines Figueres", 
+            "Cat Cines", "Cinema Olot", "Cinemes Albeniz", "Cinema Truffaut", "Cinema Teatre Comtal", 
+            "Cinema Teatre Mundial", "Cinema Montgri"
+        ];
 
         function compartirApp() {
             const msg = translations[currentLang].share;
@@ -192,29 +198,29 @@
 
         function activarCartellera() {
             isCartelleraMode = !isCartelleraMode;
-            const btn = document.getElementById('btn-cartellera');
             const title = document.getElementById('txt-events-title');
             const filterContainer = document.getElementById('filter-container');
+            const grid = document.getElementById('events-grid');
             
             const topHeader = document.getElementById('top-header');
             const cineHeader = document.getElementById('cine-header');
             const t = translations[currentLang];
 
             if(isCartelleraMode) {
-                filterContainer.classList.add('hidden'); // OCULTA LOS TRES BOTONES
+                filterContainer.classList.add('hidden');
                 title.innerText = t.cineTitle;
                 topHeader.classList.add('hidden');
                 cineHeader.classList.remove('hidden');
+                grid.classList.remove('grid-cols-2');
+                grid.classList.add('grid-cols-1'); // Lista de cines a una columna
             } else {
-                filterContainer.classList.remove('hidden'); // MUESTRA LOS TRES BOTONES
+                filterContainer.classList.remove('hidden');
                 title.innerText = t.title;
                 topHeader.classList.remove('hidden');
                 cineHeader.classList.add('hidden');
-                document.getElementById('txt-filter-type').innerText = (currentCategory==='all') ? t.filterType : categoryNames[currentCategory][currentLang];
-                document.getElementById('txt-filter-comarca').innerText = (currentComarca==='all') ? t.comarca : currentComarca;
+                grid.classList.remove('grid-cols-1');
+                grid.classList.add('grid-cols-2');
             }
-            renderCategories();
-            renderComarcas();
             renderEvents();
         }
 
@@ -224,10 +230,7 @@
             document.querySelectorAll('.options-menu').forEach(m => m.classList.remove('show'));
             const t = translations[l];
             
-            if(isCartelleraMode) {
-                document.getElementById('txt-filter-type').innerText = t.cineType;
-                document.getElementById('txt-filter-comarca').innerText = t.cineLoc;
-            } else {
+            if(!isCartelleraMode) {
                 document.getElementById('txt-filter-type').innerText = (currentCategory==='all') ? t.filterType : categoryNames[currentCategory][l];
                 document.getElementById('txt-filter-comarca').innerText = (currentComarca==='all') ? t.comarca : currentComarca;
             }
@@ -239,19 +242,14 @@
 
         function filterCat(c) { 
             currentCategory = c; 
-            if(isCartelleraMode) {
-                document.getElementById('txt-filter-type').innerText = (c === 'all') ? translations[currentLang].cineType : c;
-            } else {
-                document.getElementById('txt-filter-type').innerText = (c === 'all') ? translations[currentLang].filterType : categoryNames[c][currentLang];
-            }
+            document.getElementById('txt-filter-type').innerText = (c === 'all') ? translations[currentLang].filterType : categoryNames[c][currentLang];
             toggleMenu('typeMenu'); 
             renderEvents(); 
         }
 
         function filterCom(c) { 
             currentComarca = c; 
-            const label = isCartelleraMode ? translations[currentLang].cineLoc : translations[currentLang].comarca;
-            document.getElementById('txt-filter-comarca').innerText = (c === 'all') ? label : c; 
+            document.getElementById('txt-filter-comarca').innerText = (c === 'all') ? translations[currentLang].comarca : c; 
             toggleMenu('comarcaMenu'); 
             renderEvents(); 
         }
@@ -259,16 +257,9 @@
         function renderCategories() {
             const menu = document.getElementById('typeMenu');
             let h = `<div class="option-item" onclick="filterCat('all')"><i class="fas fa-th-large text-gray-400"></i> ${translations[currentLang].all}</div>`;
-            
-            if(isCartelleraMode) {
-                cinesLista.forEach(cine => {
-                    h += `<div class="option-item" onclick="filterCat('${cine}')"><i class="fas fa-film text-emerald-500"></i> ${cine}</div>`;
-                });
-            } else {
-                for (let k in categoryNames) { 
-                    const cat = categoryNames[k];
-                    h += `<div class="option-item" onclick="filterCat('${k}')"><i class="fas ${cat.icon}" style="color:${cat.iconColor}"></i> ${cat[currentLang]}</div>`; 
-                }
+            for (let k in categoryNames) { 
+                const cat = categoryNames[k];
+                h += `<div class="option-item" onclick="filterCat('${k}')"><i class="fas ${cat.icon}" style="color:${cat.iconColor}"></i> ${cat[currentLang]}</div>`; 
             }
             menu.innerHTML = h;
         }
@@ -276,9 +267,7 @@
         function renderComarcas() {
             const menu = document.getElementById('comarcaMenu');
             let h = `<div class="option-item" onclick="filterCom('all')"><i class="fas fa-map text-gray-400"></i> ${translations[currentLang].all}</div>`;
-            const lista = isCartelleraMode ? ubicacionesCine : comarcasNormales;
-            
-            lista.forEach(item => { 
+            comarcasNormales.forEach(item => { 
                 const safeName = item.replace(/'/g, "\\'");
                 h += `<div class="option-item" onclick="filterCom('${safeName}')"><i class="fas fa-location-dot text-cyan-500"></i> ${item}</div>`; 
             });
@@ -287,28 +276,36 @@
 
         function renderEvents() {
             const grid = document.getElementById('events-grid');
+            
+            // SI ESTAMOS EN CARTELERA, RENDERIZAMOS LA LISTA DE CINES
+            if (isCartelleraMode) {
+                grid.innerHTML = cinesLista.map(cine => `
+                    <div class="bg-white/20 backdrop-blur-md border border-white/30 rounded-2xl p-4 flex items-center justify-between shadow-lg active:scale-95 transition-all cursor-pointer mb-2">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 bg-white/30 rounded-full flex items-center justify-center text-white text-xl">
+                                <i class="fas fa-film"></i>
+                            </div>
+                            <span class="text-white font-bold text-lg">${cine}</span>
+                        </div>
+                        <i class="fas fa-chevron-right text-white/50"></i>
+                    </div>
+                `).join('');
+                return;
+            }
+
             const hoy = new Date();
             hoy.setHours(0, 0, 0, 0);
 
             let filtered = eventData.filter(ev => {
-                // Filtro de Fecha: Solo mostrar si no ha pasado el día
                 if (ev.Fecha) {
                     const fechaEvento = new Date(ev.Fecha);
                     if (fechaEvento < hoy) return false;
                 }
-
                 const cat = ev.Categoria.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-                if (isCartelleraMode) {
-                    if (cat !== 'cine') return false;
-                    const matchCine = currentCategory === 'all' || (ev.Direccion && ev.Direccion.includes(currentCategory)) || (ev.Titulo_CA && ev.Titulo_CA.includes(currentCategory));
-                    const matchLoc = currentComarca === 'all' || ev.Municipio === currentComarca;
-                    return matchCine && matchLoc;
-                } else {
-                    if (cat === 'cine') return false;
-                    const matchCat = currentCategory === 'all' || cat === currentCategory.toLowerCase();
-                    const matchCom = currentComarca === 'all' || ev.Comarca === currentComarca;
-                    return matchCat && matchCom;
-                }
+                if (cat === 'cine') return false;
+                const matchCat = currentCategory === 'all' || cat === currentCategory.toLowerCase();
+                const matchCom = currentComarca === 'all' || ev.Comarca === currentComarca;
+                return matchCat && matchCom;
             });
 
             if(filtered.length === 0 && eventData.length > 0) { 
