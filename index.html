@@ -169,13 +169,21 @@
         };
 
         const comarcasNormales = ["Alt Empordà", "Baix Empordà", "Cerdanya", "Garrotxa", "Gironès", "Pla de l'Estany", "Ripollès", "Selva"];
-        const ubicacionesCine = ["Girona", "Blanes", "Figueres", "Olot", "Palamós", "Platja d'Aro", "Ripoll", "Roses", "Salt", "Begur", "Torroella de Montgrí"];
         
-        // LISTA DE CINES PROPORCIONADA
-        const cinesLista = [
-            "Ocine Girona", "Odeon Girona", "Ocine Blanes", "Ocine Platja d'Aro", "Multicines Figueres", 
-            "Cat Cines", "Cinema Olot", "Cinemes Albeniz", "Cinema Truffaut", "Cinema Teatre Comtal", 
-            "Cinema Teatre Mundial", "Cinema Montgri"
+        // LISTA DE CINES DEFINITIVA SEGÚN IMAGEN
+        const cinesListaDefinitiva = [
+            { nombre: "Ocine Girona", loc: "Girona" },
+            { nombre: "Odeon Girona", loc: "Salt" },
+            { nombre: "Ocine Blanes", loc: "Blanes" },
+            { nombre: "Ocine Platja d'Aro", loc: "Platja d'Aro" },
+            { nombre: "Multicines Olot", loc: "Olot" },
+            { nombre: "Cat Cinemes", loc: "Figueres" },
+            { nombre: "Cinema Casino", loc: "Begur" },
+            { nombre: "Cinemes Roses", loc: "Roses" },
+            { nombre: "Cinema Truffaut", loc: "Girona" },
+            { nombre: "Cinema Teatre Palafrugell", loc: "Palafrugell" },
+            { nombre: "Cinema Teatre Comtal", loc: "Ripoll" },
+            { nombre: "Cinema Montgrí", loc: "Torroella de Montgrí" }
         ];
 
         function compartirApp() {
@@ -212,7 +220,7 @@
                 topHeader.classList.add('hidden');
                 cineHeader.classList.remove('hidden');
                 grid.classList.remove('grid-cols-2');
-                grid.classList.add('grid-cols-1'); // Lista de cines a una columna
+                grid.classList.add('grid-cols-1');
             } else {
                 filterContainer.classList.remove('hidden');
                 title.innerText = t.title;
@@ -277,15 +285,19 @@
         function renderEvents() {
             const grid = document.getElementById('events-grid');
             
-            // SI ESTAMOS EN CARTELERA, RENDERIZAMOS LA LISTA DE CINES
             if (isCartelleraMode) {
-                grid.innerHTML = cinesLista.map(cine => `
+                grid.innerHTML = cinesListaDefinitiva.map(cine => `
                     <div class="bg-white/20 backdrop-blur-md border border-white/30 rounded-2xl p-4 flex items-center justify-between shadow-lg active:scale-95 transition-all cursor-pointer mb-2">
                         <div class="flex items-center gap-4">
                             <div class="w-12 h-12 bg-white/30 rounded-full flex items-center justify-center text-white text-xl">
                                 <i class="fas fa-film"></i>
                             </div>
-                            <span class="text-white font-bold text-lg">${cine}</span>
+                            <div>
+                                <p class="text-white font-black text-lg leading-tight">${cine.nombre}</p>
+                                <p class="text-white/70 font-bold text-xs mt-1 flex items-center gap-1 uppercase tracking-wider">
+                                    <i class="fas fa-location-dot text-[10px] text-cyan-300"></i> ${cine.loc}
+                                </p>
+                            </div>
                         </div>
                         <i class="fas fa-chevron-right text-white/50"></i>
                     </div>
