@@ -88,18 +88,18 @@
         </div>
 
         <div class="px-6 -mt-8 relative z-10 pb-12">
-            <h2 id="peli-titulo" class="text-4xl font-black text-white mb-6 drop-shadow-lg"></h2>
+            <h2 id="peli-titulo" class="text-4xl font-black text-white mb-8 drop-shadow-lg"></h2>
             
-            <div class="flex flex-wrap gap-x-8 gap-y-4 mb-8">
-                <div class="flex flex-col"><span class="text-gray-500 text-[10px] font-black tracking-widest uppercase">Gènere</span><span id="peli-genero" class="text-white text-xl font-bold"></span></div>
-                <div class="flex flex-col"><span class="text-gray-500 text-[10px] font-black tracking-widest uppercase">Durada</span><span id="peli-duracion" class="text-white text-xl font-bold"></span></div>
-                <div class="flex flex-col"><span class="text-gray-500 text-[10px] font-black tracking-widest uppercase">Edat</span><span id="peli-edad" class="text-white text-xl font-bold"></span></div>
+            <div class="flex flex-wrap gap-x-12 gap-y-4 mb-8">
+                <div class="flex flex-col"><span class="text-white text-xs font-black uppercase tracking-widest mb-1">GÈNERE</span><span id="peli-genero" class="text-gray-400 text-sm font-bold"></span></div>
+                <div class="flex flex-col"><span class="text-white text-xs font-black uppercase tracking-widest mb-1">DURADA</span><span id="peli-duracion" class="text-gray-400 text-sm font-bold"></span></div>
+                <div class="flex flex-col"><span class="text-white text-xs font-black uppercase tracking-widest mb-1">EDAT</span><span id="peli-edad" class="text-gray-400 text-sm font-bold"></span></div>
             </div>
 
-            <div class="mb-10"><p id="peli-sinopsis" class="text-gray-400 text-base leading-relaxed italic"></p></div>
+            <div class="mb-10"><p id="peli-sinopsis" class="text-gray-300 text-base leading-relaxed italic"></p></div>
 
             <div class="bg-white/5 rounded-3xl p-6 border border-white/10 mb-8">
-                <h3 class="text-cyan-400 font-black text-xs uppercase tracking-[0.2em] mb-6 flex items-center gap-2"><i class="fas fa-clock"></i> Sessions</h3>
+                <h3 class="text-cyan-400 font-black text-xs uppercase tracking-[0.2em] mb-6 flex items-center gap-2"><i class="fas fa-clock"></i> SESSIONS I HORARIS</h3>
                 <div id="contenedor-horarios" class="space-y-8">
                     <div class="flex gap-4">
                         <div class="w-16 shrink-0 text-center border-r border-white/10 pr-4">
@@ -112,15 +112,15 @@
             </div>
 
             <div class="flex gap-3">
-                <button onclick="verTrailer()" class="flex-1 bg-white/10 text-white font-black py-4 rounded-2xl flex items-center justify-center gap-2 border border-white/10 text-sm">
-                    <i class="fas fa-play text-cyan-400 text-xs"></i> TRÀILER
+                <button onclick="verTrailer()" class="flex-1 bg-white/10 hover:bg-white/20 text-white font-black py-4 rounded-2xl flex items-center justify-center gap-2 border border-white/10 text-xs tracking-tighter">
+                    <i class="fas fa-play text-cyan-400"></i> VEURE TRÀILER
                 </button>
-                <button onclick="irACompraEntradas()" class="flex-[2] bg-cyan-500 text-white font-black py-4 rounded-2xl flex items-center justify-center gap-2 shadow-xl shadow-cyan-500/20 text-sm">
-                    <i class="fas fa-ticket text-xs"></i> COMPRAR ENTRADES
+                <button onclick="irACompraEntradas()" class="flex-[2] bg-cyan-500 text-white font-black py-4 rounded-2xl flex items-center justify-center gap-2 shadow-xl shadow-cyan-500/20 text-xs tracking-tighter">
+                    <i class="fas fa-ticket"></i> COMPRAR ENTRADES
                 </button>
             </div>
-            <button onclick="verUbicacionCine()" class="w-full mt-4 py-4 text-gray-500 font-bold flex items-center justify-center gap-2 text-[10px] uppercase tracking-widest">
-                <i class="fas fa-map-marker-alt"></i> Com arribar al cine
+            <button onclick="verUbicacionCine()" class="w-full mt-4 py-4 text-gray-400 font-bold flex items-center justify-center gap-2 text-[10px] uppercase tracking-widest opacity-60">
+                <i class="fas fa-map-marker-alt"></i> COM ARRIBAR AL CINE
             </button>
         </div>
     </div>
@@ -150,20 +150,14 @@
 
     <script>
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwxJoxAGAkRVvGlTQ5OQBrWc_aq15uCXjH14y5G0CmtIx_NJgCAJlUM9eeiGwFOgXBx/exec";
-        let currentLang = 'ca', currentCategory = 'all', currentComarca = 'all', eventData = [], isCartelleraMode = false;
-        let peliActualTrailer = "", peliActualCompra = "", peliActualMapa = "", currentTicketUrl = "", currentIdDetalle = null;
+        let currentLang = 'ca', eventData = [], currentTicketUrl = "", currentIdDetalle = null, isCartelleraMode = false;
+        let peliActualTrailer = "", peliActualCompra = "", peliActualMapa = "";
         let myLikes = JSON.parse(localStorage.getItem('giroci_likes') || "[]");
 
         const translations = {
             ca: { filterType: "Tipus d'Oci", comarca: "Comarca", title: "Esdeveniments Propers", all: "Tots", share: "Mira aquesta App d'oci a Girona: ", cartellera: "CARTELLERA DE CINE", cineTitle: "Cines" },
             es: { filterType: "Tipo de Ocio", comarca: "Comarca", title: "Próximos Eventos", all: "Todos", share: "Mira esta App de ocio en Girona: ", cartellera: "CARTELERA DE CINE", cineTitle: "Cines" },
             en: { filterType: "Leisure Type", comarca: "County", title: "Upcoming Events", all: "All", share: "Check out this Girona Leisure App: ", cartellera: "CINEMA LISTINGS", cineTitle: "Cinemas" }
-        };
-
-        const categoryNames = {
-            gastronomia: { icon: "fa-utensils", iconColor: "#ff4d4d", ca: "Gastronomia", es: "Gastronomía", en: "Gastronomy" },
-            conciertos: { icon: "fa-guitar", iconColor: "#f43f5e", ca: "Concerts", es: "Conciertos", en: "Concerts" },
-            actividades: { icon: "fa-palette", iconColor: "#06b6d4", ca: "Activitats", es: "Actividades", en: "Activities" }
         };
 
         const cinesListaDefinitiva = [{ nombre: "Ocine Girona", loc: "Girona" },{ nombre: "Odeon Girona", loc: "Salt" },{ nombre: "Ocine Blanes", loc: "Blanes" },{ nombre: "Ocine Platja d'Aro", loc: "Platja d'Aro" },{ nombre: "Multicines Olot", loc: "Olot" },{ nombre: "Cat Cinemes", loc: "Figueres" }];
@@ -189,7 +183,7 @@
                 grid.innerHTML = cinesListaDefinitiva.map(cine => `<div onclick="abrirCine('${cine.nombre}')" class="bg-white/20 backdrop-blur-md border border-white/30 rounded-2xl p-4 flex items-center justify-between text-white shadow-lg active:scale-95 transition-all cursor-pointer"><div class="flex items-center gap-4"><div class="w-10 h-10 bg-white/30 rounded-full flex items-center justify-center"><i class="fas fa-film"></i></div><div><p class="font-black text-lg">${cine.nombre}</p><p class="text-[10px] opacity-70 uppercase tracking-widest">${cine.loc}</p></div></div><i class="fas fa-chevron-right opacity-40"></i></div>`).join('');
                 return;
             }
-            grid.innerHTML = eventData.filter(ev => ev.Categoria.toLowerCase() !== 'cine').map(ev => `<div onclick="abrirDetalle('${ev.ID}')" class="bg-white rounded-[1.5rem] overflow-hidden shadow-xl active:scale-95 transition-all cursor-pointer"><img src="${ev.Imagen_URL}" class="h-32 w-full object-cover"><div class="p-3"><h3 class="font-bold text-[13px] text-gray-800 leading-tight">${ev['Titulo_'+currentLang.toUpperCase()] || ev.Titulo_CAT}</h3><p class="text-[10px] text-gray-400 mt-1 uppercase font-bold">${ev.Municipio}</p></div></div>`).join('');
+            grid.innerHTML = eventData.filter(ev => ev.Categoria.toLowerCase() !== 'cine').map(ev => `<div onclick="abrirDetalle('${ev.ID}')" class="bg-white rounded-[1.5rem] overflow-hidden shadow-xl active:scale-95 transition-all cursor-pointer relative">${myLikes.includes(String(ev.ID)) ? '<div class="absolute top-2 right-2 z-10 text-red-500 bg-white/80 w-6 h-6 rounded-full flex items-center justify-center text-[10px] shadow-sm"><i class="fas fa-heart"></i></div>' : ''}<img src="${ev.Imagen_URL}" class="h-32 w-full object-cover"><div class="p-3"><h3 class="font-bold text-[13px] text-gray-800 leading-tight">${ev['Titulo_'+currentLang.toUpperCase()] || ev.Titulo_CAT}</h3><p class="text-[10px] text-gray-400 mt-1 uppercase font-bold">${ev.Municipio}</p></div></div>`).join('');
         }
 
         function abrirCine(nombre) {
@@ -202,14 +196,12 @@
         function abrirDetallePeli(titulo) {
             document.getElementById('peli-titulo').innerText = titulo;
             document.getElementById('peli-genero').innerText = "Acció, Ciència ficció";
-            document.getElementById('peli-duracion').innerText = "195 MIN.";
-            document.getElementById('peli-edad').innerText = "12 ANYS";
-            document.getElementById('peli-sinopsis').innerText = "Submergeix-te en el món de Pandora una vegada més en aquesta seqüela èpica.";
+            document.getElementById('peli-duracion').innerText = "195 min.";
+            document.getElementById('peli-edad').innerText = "12 anys";
+            document.getElementById('peli-sinopsis').innerText = "Submergeix-te en el món de Pandora una vegada més...";
             document.getElementById('peli-banner-img').src = "https://image.tmdb.org/t/p/original/mXpEov806uMptpE8pL9f9Q6V4tU.jpg";
-            
             const sesiones = [{ h: "17:00", t: "DIGITAL" },{ h: "18:30", t: "ATMOS" },{ h: "21:00", t: "3D" }];
             document.getElementById('peli-sesiones-hoy').innerHTML = sesiones.map(s => `<div class="bg-white/10 border border-white/20 rounded-xl p-2 min-w-[70px] text-center"><p class="text-white font-black text-sm">${s.h}</p><p class="text-[8px] font-black text-cyan-400 mt-1">${s.t}</p></div>`).join('');
-            
             peliActualTrailer = "https://youtube.com"; peliActualCompra = "https://google.com"; peliActualMapa = "Girona";
             document.getElementById('pantalla-detalle-peli').classList.remove('hidden');
         }
@@ -219,7 +211,6 @@
         function verTrailer() { window.open(peliActualTrailer, '_blank'); }
         function irACompraEntradas() { window.open(peliActualCompra, '_blank'); }
         function verUbicacionCine() { window.open('https://www.google.com/maps/search/' + encodeURIComponent(peliActualMapa), '_blank'); }
-        
         function abrirDetalle(id) {
             const ev = eventData.find(e => String(e.ID) === String(id)); if(!ev) return;
             currentIdDetalle = id; document.getElementById('titulo-det').innerText = ev['Titulo_'+currentLang.toUpperCase()] || ev.Titulo_CAT;
