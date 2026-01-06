@@ -7,7 +7,7 @@
     <link rel="manifest" href="manifest.json?v=12">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="apple-touch-icon" href="logotipo.png">
+    <link rel="apple-touch-icon" href="logo.png">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -47,12 +47,11 @@
         .flag-icon { width: 22px; height: 15px; object-fit: cover; border-radius: 2px; }
         .skeleton { background: rgba(255,255,255,0.2); border-radius: 1.5rem; height: 180px; position: relative; overflow: hidden; }
 
-        /* Botón Cine Estilo Listado */
-        .cine-item-btn { 
-            background: white; border-radius: 18px; padding: 20px; 
-            margin-bottom: 10px; width: 100%; color: #1e5d8a; 
-            font-weight: 800; display: flex; justify-content: space-between; 
-            align-items: center; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border: none;
+        /* Estilo para los botones de la lista de cines */
+        .btn-cine-list {
+            background: white; border-radius: 18px; padding: 18px; margin-bottom: 10px;
+            width: 100%; color: #1e5d8a; font-weight: 800; display: flex; 
+            justify-content: space-between; align-items: center; box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
@@ -60,14 +59,14 @@
 </head>
 <body>
     <div id="splash-screen">
-        <img src="logotipo.png" alt="GirOci Logo" class="logo-splash">
+        <img src="logo.png" alt="GirOci Logo" class="logo-splash">
         <button class="btn-entrar" onclick="entrarApp()">ENTRAR</button>
     </div>
 
     <div id="main-content">
         <div class="flex justify-between items-center mb-2 px-1">
             <div class="flex gap-2">
-                <button id="btn-back-nav" onclick="navAtras()" class="hidden w-10 h-10 bg-black/20 backdrop-blur-md rounded-xl border border-white/30 text-white flex items-center justify-center">
+                <button id="btn-back-main" onclick="volverAEventos()" class="hidden w-10 h-10 bg-black/20 backdrop-blur-md rounded-xl border border-white/30 text-white flex items-center justify-center">
                     <i class="fas fa-arrow-left"></i>
                 </button>
                 <button onclick="compartirApp()" class="w-10 h-10 bg-white/20 backdrop-blur-md rounded-xl border border-white/30 text-white flex items-center justify-center active:scale-90 transition-all shadow-lg">
@@ -91,31 +90,24 @@
         </div>
 
         <div class="flex items-center justify-center gap-2 mb-6 px-2">
-            <img src="logotipo.png" alt="Logo" class="w-32 h-32 object-contain drop-shadow-2xl shrink-0">
+            <img src="logo.png" alt="Logo" class="w-32 h-32 object-contain drop-shadow-2xl shrink-0">
             <h1 class="text-6xl text-white font-black tracking-tighter -ml-1">GirOci</h1>
         </div>
 
-        <div id="controles-ocio" class="flex flex-col gap-2 mb-8">
-            <div id="btn-cine-main" class="select-trigger !justify-center gap-3 !bg-emerald-500 !mb-1" onclick="mostrarCines()">
-                <i class="fas fa-film text-white"></i>
-                <span id="txt-btn-cine">CARTELLERA DE CINE</span>
+        <div class="flex gap-2 mb-8" id="filtros-container">
+            <div class="custom-select flex-1" id="typeSelect">
+                <div class="select-trigger" onclick="toggleMenu('typeMenu')">
+                    <div class="flex items-center gap-2"><i class="fas fa-list text-cyan-300"></i> <span id="txt-filter-type">Tipus d'Oci</span></div>
+                    <i class="fas fa-chevron-down text-[10px]"></i>
+                </div>
+                <div class="options-menu" id="typeMenu"></div>
             </div>
-            
-            <div id="filtros-normales" class="flex gap-2">
-                <div class="custom-select flex-1" id="typeSelect">
-                    <div class="select-trigger" onclick="toggleMenu('typeMenu')">
-                        <div class="flex items-center gap-2"><i class="fas fa-list text-cyan-300"></i> <span id="txt-filter-type">Tipus d'Oci</span></div>
-                        <i class="fas fa-chevron-down text-[10px]"></i>
-                    </div>
-                    <div class="options-menu" id="typeMenu"></div>
+            <div class="custom-select flex-1" id="comarcaSelect">
+                <div class="select-trigger" onclick="toggleMenu('comarcaMenu')">
+                    <div class="flex items-center gap-2"><i class="fas fa-map-marker-alt text-cyan-300"></i> <span id="txt-filter-comarca">Comarca</span></div>
+                    <i class="fas fa-chevron-down text-[10px]"></i>
                 </div>
-                <div class="custom-select flex-1" id="comarcaSelect">
-                    <div class="select-trigger" onclick="toggleMenu('comarcaMenu')">
-                        <div class="flex items-center gap-2"><i class="fas fa-map-marker-alt text-cyan-300"></i> <span id="txt-filter-comarca">Comarca</span></div>
-                        <i class="fas fa-chevron-down text-[10px]"></i>
-                    </div>
-                    <div class="options-menu" id="comarcaMenu"></div>
-                </div>
+                <div class="options-menu" id="comarcaMenu"></div>
             </div>
         </div>
 
@@ -153,7 +145,7 @@
 
     <script>
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwxJoxAGAkRVvGlTQ5OQBrWc_aq15uCXjH14y5G0CmtIx_NJgCAJlUM9eeiGwFOgXBx/exec";
-        let currentLang = 'ca', currentCategory = 'all', currentComarca = 'all', eventData = [], cineData = [], currentTicketUrl = "", currentIdDetalle = null, vistaCine = 'home';
+        let currentLang = 'ca', currentCategory = 'all', currentComarca = 'all', eventData = [], cineData = [], currentTicketUrl = "", currentIdDetalle = null;
         
         let myLikes = JSON.parse(localStorage.getItem('giroci_likes') || "[]");
 
@@ -180,89 +172,25 @@
 
         const comarcas = ["Alt Empordà", "Baix Empordà", "Cerdanya", "Garrotxa", "Gironès", "Pla de l'Estany", "Ripollès", "Selva"];
 
-        // --- Lógica de Cartelera Blindada ---
-        async function loadData() {
-            const cached = localStorage.getItem('giroci_data');
-            if(cached) { eventData = JSON.parse(cached); renderEvents(); renderCategories(); renderComarcas(); }
-            try {
-                const [respE, respC] = await Promise.all([fetch(SCRIPT_URL), fetch('cine.json')]);
-                eventData = await respE.json();
-                cineData = await respC.json();
-                localStorage.setItem('giroci_data', JSON.stringify(eventData));
-                renderEvents(); renderCategories(); renderComarcas();
-            } catch (e) { console.error(e); }
-        }
-
-        function mostrarCines() {
-            vistaCine = 'cines';
-            document.getElementById('filtros-normales').classList.add('hidden');
-            document.getElementById('btn-cine-main').classList.add('hidden');
-            document.getElementById('btn-back-nav').classList.remove('hidden');
-            document.getElementById('txt-events-title').innerText = translations[currentLang].selectCine;
-            
-            const listaCines = [...new Set(cineData.map(c => c.CINE))];
-            const grid = document.getElementById('events-grid');
-            grid.className = "flex flex-col mb-10";
-            grid.innerHTML = listaCines.map(cine => `
-                <button onclick="mostrarCartelera('${cine}')" class="cine-item-btn">
-                    <span>${cine}</span>
-                    <i class="fas fa-chevron-right opacity-30"></i>
-                </button>
-            `).join('');
-        }
-
-        function mostrarCartelera(cineNombre) {
-            vistaCine = 'peliculas';
-            document.getElementById('txt-events-title').innerText = cineNombre;
-            const pelis = cineData.filter(p => p.CINE === cineNombre);
-            const grid = document.getElementById('events-grid');
-            grid.className = "grid grid-cols-2 gap-4 mb-10";
-            grid.innerHTML = pelis.map(p => `
-                <div onclick="abrirDetalleCine(${p.ID})" class="bg-white rounded-[1.5rem] overflow-hidden shadow-xl active:scale-95 transition-all cursor-pointer relative">
-                    <img src="${p.Imagen_URL}" class="h-32 w-full object-cover" loading="lazy">
-                    <div class="p-3">
-                        <h3 class="font-bold text-[13px] text-gray-800 leading-tight h-8 overflow-hidden">${p.TITULO}</h3>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function navAtras() {
-            if(vistaCine === 'peliculas') mostrarCines();
-            else {
-                vistaCine = 'home';
-                document.getElementById('filtros-normales').classList.remove('hidden');
-                document.getElementById('btn-cine-main').classList.remove('hidden');
-                document.getElementById('btn-back-nav').classList.add('hidden');
-                document.getElementById('txt-events-title').innerText = translations[currentLang].title;
-                document.getElementById('events-grid').className = "grid grid-cols-2 gap-4 mb-10";
-                renderEvents();
-            }
-        }
-
-        function abrirDetalleCine(id) {
-            const p = cineData.find(x => x.ID == id);
-            currentIdDetalle = "cine_" + id;
-            document.getElementById('titulo-det').innerText = p.TITULO;
-            document.getElementById('lugar-det').innerText = p.CINE;
-            document.getElementById('fecha-det').innerText = "Cartellera";
-            document.getElementById('hora-det').innerText = "--:--";
-            document.getElementById('precio-det').innerText = p.PRECIO + "€";
-            document.getElementById('desc-det').innerText = p.SINOPSIS_ES;
-            document.getElementById('img-det').src = p.Imagen_URL;
-            document.getElementById('img-det-bg').src = p.Imagen_URL;
-            document.getElementById('direccion-det').innerText = p.CINE;
-            currentTicketUrl = p.LINK_RESERVA;
-            document.getElementById('btn-reserve').style.display = "block";
-            updateLikeVisual();
-            document.getElementById('pantalla-detalle').classList.remove('hidden');
-        }
-
-        // --- Funciones originales intactas ---
         function compartirApp() {
             const msg = translations[currentLang].share;
             const url = window.location.href.split('?')[0]; 
             window.open(`https://wa.me/?text=${encodeURIComponent(msg + url)}`, '_blank');
+        }
+
+        async function loadData() {
+            const cached = localStorage.getItem('giroci_data');
+            if(cached) { eventData = JSON.parse(cached); renderEvents(); renderCategories(); renderComarcas(); }
+            try {
+                const [respEvents, respCine] = await Promise.all([
+                    fetch(SCRIPT_URL),
+                    fetch('cine.json')
+                ]);
+                eventData = await respEvents.json();
+                cineData = await respCine.json();
+                localStorage.setItem('giroci_data', JSON.stringify(eventData));
+                renderEvents(); renderCategories(); renderComarcas();
+            } catch (e) { console.error(e); }
         }
 
         function selectLang(l, f, lbl) {
@@ -272,21 +200,75 @@
             const t = translations[l];
             document.getElementById('txt-filter-type').innerText = (currentCategory==='all') ? t.filterType : categoryNames[currentCategory][l];
             document.getElementById('txt-filter-comarca').innerText = (currentComarca==='all') ? t.comarca : currentComarca;
-            if(vistaCine === 'home') document.getElementById('txt-events-title').innerText = t.title;
+            document.getElementById('txt-events-title').innerText = t.title;
             renderEvents(); renderCategories(); renderComarcas();
         }
 
-        function filterCat(c) { currentCategory = c; document.getElementById('txt-filter-type').innerText = (c === 'all') ? translations[currentLang].filterType : categoryNames[c][currentLang]; toggleMenu('typeMenu'); renderEvents(); }
+        function filterCat(c) { 
+            if(c === 'cine') { 
+                mostrarListadoCines(); 
+                toggleMenu('typeMenu'); 
+                return; 
+            }
+            currentCategory = c; 
+            document.getElementById('txt-filter-type').innerText = (c === 'all') ? translations[currentLang].filterType : categoryNames[c][currentLang]; 
+            toggleMenu('typeMenu'); 
+            renderEvents(); 
+        }
+
         function filterCom(c) { currentComarca = c; document.getElementById('txt-filter-comarca').innerText = (c === 'all') ? translations[currentLang].comarca : c; toggleMenu('comarcaMenu'); renderEvents(); }
 
+        // --- Lógica Nueva para Cines ---
+        function mostrarListadoCines() {
+            document.getElementById('filtros-container').classList.add('hidden');
+            document.getElementById('btn-back-main').classList.remove('hidden');
+            document.getElementById('txt-events-title').innerText = translations[currentLang].selectCine;
+            
+            const listaCines = [...new Set(cineData.map(c => c.CINE))];
+            const grid = document.getElementById('events-grid');
+            grid.className = "flex flex-col mb-10"; // Cambiamos a lista vertical
+            grid.innerHTML = listaCines.map(cine => `
+                <div class="btn-cine-list" onclick="alert('Aquí listaremos las pelis de: ' + '${cine}')">
+                    <span>${cine}</span>
+                    <i class="fas fa-chevron-right opacity-30"></i>
+                </div>
+            `).join('');
+        }
+
+        function volverAEventos() {
+            document.getElementById('filtros-container').classList.remove('hidden');
+            document.getElementById('btn-back-main').classList.add('hidden');
+            document.getElementById('txt-events-title').innerText = translations[currentLang].title;
+            const grid = document.getElementById('events-grid');
+            grid.className = "grid grid-cols-2 gap-4 mb-10";
+            renderEvents();
+        }
+
+        function renderCategories() {
+            const menu = document.getElementById('typeMenu');
+            let h = `<div class="option-item" onclick="filterCat('all')"><i class="fas fa-th-large text-gray-400"></i> ${translations[currentLang].all}</div>`;
+            for (let k in categoryNames) { 
+                const cat = categoryNames[k];
+                h += `<div class="option-item" onclick="filterCat('${k}')"><i class="fas ${cat.icon}" style="color:${cat.iconColor}"></i> ${cat[currentLang]}</div>`; 
+            }
+            menu.innerHTML = h;
+        }
+
+        function renderComarcas() {
+            const menu = document.getElementById('comarcaMenu');
+            let h = `<div class="option-item" onclick="filterCom('all')"><i class="fas fa-map text-gray-400"></i> ${translations[currentLang].all}</div>`;
+            comarcas.forEach(c => { h += `<div class="option-item" onclick="filterCom('${c}')"><i class="fas fa-location-dot text-cyan-500"></i> ${c}</div>`; });
+            menu.innerHTML = h;
+        }
+
         function renderEvents() {
-            if(vistaCine !== 'home') return;
             const grid = document.getElementById('events-grid');
             let filtered = eventData.filter(ev => {
                 const matchCat = currentCategory === 'all' || ev.Categoria.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "") === currentCategory.toLowerCase();
                 const matchCom = currentComarca === 'all' || ev.Comarca === currentComarca;
                 return matchCat && matchCom;
             });
+            if(filtered.length === 0 && eventData.length > 0) { grid.innerHTML = `<p class="text-white col-span-2 text-center opacity-60 py-10">No hi ha esdeveniments.</p>`; return; }
             grid.innerHTML = filtered.map(ev => {
                 const isFav = myLikes.includes(String(ev.ID));
                 return `
@@ -294,7 +276,7 @@
                     ${isFav ? '<div class="absolute top-2 right-2 z-10 text-red-500 bg-white/80 w-6 h-6 rounded-full flex items-center justify-center text-[10px] shadow-sm"><i class="fas fa-heart"></i></div>' : ''}
                     <img src="${ev.Imagen_URL}" class="h-32 w-full object-cover" loading="lazy">
                     <div class="p-3">
-                        <h3 class="font-bold text-[13px] text-gray-800 leading-tight h-8 overflow-hidden">${ev.Titulo_CA}</h3>
+                        <h3 class="font-bold text-[13px] text-gray-800 leading-tight h-8 overflow-hidden">${ev['Titulo_'+currentLang.toUpperCase()] || ev.Titulo_CAT || ev.Titulo_CA}</h3>
                         <p class="text-[10px] text-gray-400 mt-1 uppercase font-bold">${ev.Municipio}</p>
                     </div>
                 </div>`;
@@ -305,17 +287,20 @@
             const ev = eventData.find(e => String(e.ID) === String(id));
             if(!ev) return;
             currentIdDetalle = String(id);
-            document.getElementById('titulo-det').innerText = ev.Titulo_CA;
+            const lang = currentLang.toUpperCase();
+            document.getElementById('titulo-det').innerText = ev['Titulo_'+lang] || ev.Titulo_CAT || ev.Titulo_CA;
             document.getElementById('lugar-det').innerText = ev.Municipio;
             document.getElementById('fecha-det').innerText = ev.Fecha ? ev.Fecha.split('T')[0].split('-').reverse().join('/') : "";
             document.getElementById('hora-det').innerText = ev.Hora ? ev.Hora.toString().substring(0, 5) : "--:--";
-            document.getElementById('precio-det').innerText = ev.Precio + " €";
-            document.getElementById('desc-det').innerText = ev.Desc_CA;
+            let p = ev.Precio;
+            document.getElementById('precio-det').innerText = (p && !isNaN(p)) ? p + " €" : p;
+            document.getElementById('desc-det').innerText = ev['Desc_'+lang] || ev.Desc_CA;
             document.getElementById('img-det').src = ev.Imagen_URL;
             document.getElementById('img-det-bg').src = ev.Imagen_URL;
             document.getElementById('direccion-det').innerText = ev.Direccion || ev.Municipio;
             currentTicketUrl = ev.Link_Entradas;
-            document.getElementById('btn-reserve').style.display = currentTicketUrl ? "block" : "none";
+            const btnRes = document.getElementById('btn-reserve');
+            btnRes.style.display = (currentTicketUrl && currentTicketUrl.trim() !== "" && String(ev.Precio).toLowerCase() !== "gratis") ? "block" : "none";
             updateLikeVisual();
             document.getElementById('pantalla-detalle').classList.remove('hidden');
         }
@@ -332,8 +317,7 @@
             const isFav = myLikes.includes(String(currentIdDetalle));
             const btn = document.getElementById('btn-like-det');
             const icon = btn.querySelector('i');
-            if(isFav) { icon.className = "fas fa-heart text-red-500"; btn.classList.add('bg-white'); } 
-            else { icon.className = "far fa-heart text-white"; btn.classList.remove('bg-white'); }
+            if(isFav) { icon.className = "fas fa-heart text-red-500"; btn.classList.add('bg-white'); } else { icon.className = "far fa-heart text-white"; btn.classList.remove('bg-white'); }
         }
 
         function toggleMenu(id) { 
@@ -341,25 +325,13 @@
             document.querySelectorAll('.options-menu').forEach(x => x.classList.remove('show'));
             if(!isVisible) m.classList.add('show'); 
         }
+        function abrirMapa() { 
+            const dir = document.getElementById('direccion-det').innerText;
+            window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(dir)}`, '_blank');
+        }
         function cerrarDetalle() { document.getElementById('pantalla-detalle').classList.add('hidden'); }
         function irAReserva() { if(currentTicketUrl) window.open(currentTicketUrl, '_blank'); }
         function entrarApp() { document.getElementById('splash-screen').style.opacity = '0'; setTimeout(() => { document.getElementById('splash-screen').style.display = 'none'; document.getElementById('main-content').style.display = 'block'; setTimeout(() => document.getElementById('main-content').style.opacity = '1', 50); loadData(); }, 600); }
-        function renderCategories() {
-            const menu = document.getElementById('typeMenu');
-            let h = `<div class="option-item" onclick="filterCat('all')"><i class="fas fa-th-large text-gray-400"></i> ${translations[currentLang].all}</div>`;
-            for (let k in categoryNames) { 
-                const cat = categoryNames[k];
-                h += `<div class="option-item" onclick="filterCat('${k}')"><i class="fas ${cat.icon}" style="color:${cat.iconColor}"></i> ${cat[currentLang]}</div>`; 
-            }
-            menu.innerHTML = h;
-        }
-        function renderComarcas() {
-            const menu = document.getElementById('comarcaMenu');
-            let h = `<div class="option-item" onclick="filterCom('all')"><i class="fas fa-map text-gray-400"></i> ${translations[currentLang].all}</div>`;
-            comarcas.forEach(c => { h += `<div class="option-item" onclick="filterCom('${c}')"><i class="fas fa-location-dot text-cyan-500"></i> ${c}</div>`; });
-            menu.innerHTML = h;
-        }
-        function abrirMapa() { const dir = document.getElementById('direccion-det').innerText; window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(dir)}`, '_blank'); }
     </script>
 </body>
 </html>
