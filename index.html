@@ -114,6 +114,15 @@
         <div id="events-grid" class="grid grid-cols-2 gap-4 mb-10"><div class="skeleton"></div><div class="skeleton"></div></div>
     </div>
 
+    <div id="pantalla-peliculas" class="fixed inset-0 bg-[#1e293b] z-[2600] hidden overflow-y-auto p-5">
+        <div class="flex items-center justify-between mb-8 mt-4">
+            <button onclick="cerrarPeliculas()" class="bg-white/10 w-10 h-10 rounded-xl text-white flex items-center justify-center border border-white/20"><i class="fas fa-arrow-left"></i></button>
+            <h2 id="cine-nombre-titulo" class="text-white text-2xl font-black text-right truncate ml-4">Nombre Cine</h2>
+        </div>
+        <div id="peliculas-grid" class="grid grid-cols-2 gap-6">
+            </div>
+    </div>
+
     <div id="pantalla-detalle" class="fixed inset-0 bg-[#1e293b] z-[2500] hidden overflow-y-auto">
         <div class="relative w-full h-[35vh] bg-black flex items-center justify-center overflow-hidden">
             <img id="img-det-bg" src="" class="absolute inset-0 w-full h-full object-cover blur-2xl opacity-40 scale-110">
@@ -153,7 +162,7 @@
             es: { filterType: "Tipo de Ocio", comarca: "Comarca", cineType: "Cines", cineLoc: "Ubicación", title: "Próximos Eventos", place: "Lugar", date: "Fecha", price: "Precio", time: "Hora", all: "Todos", share: "Mira esta App de ocio en Girona: ", cartellera: "CARTELERA DE CINE", cineTitle: "Cines" },
             en: { filterType: "Leisure Type", comarca: "County", cineType: "Cinemas", cineLoc: "Location", title: "Upcoming Events", place: "Location", date: "Date", price: "Price", time: "Time", all: "All", share: "Check out this Girona Leisure App: ", cartellera: "CINEMA LISTINGS", cineTitle: "Cinemas" },
             fr: { filterType: "Loisirs", comarca: "Arrondissement", cineType: "Cinémas", cineLoc: "Emplacement", title: "Prochains Événements", place: "Lieu", date: "Date", price: "Prix", time: "Heure", all: "Tous", share: "Découvrez esta aplicación de loisirs à Gérone: ", cartellera: "CINÉMA", cineTitle: "Cinémas" },
-            de: { filterType: "Freizeit", comarca: "Landkreis", cineType: "Kinos", cineLoc: "Standort", title: "Kommende Events", place: "Ort", date: "Datum", price: "Preis", time: "Zeit", all: "Alle", share: "Schau dir diese Freizeit-App für Girona an: ", cartellera: "KINO", cineTitle: "Kinos" }
+            de: { filterType: "Freizeit", comarca: "Landkreis", cineType: "Kinos", cineLoc: "Standort", title: "Kommende Events", place: "Ort", date: "Datum", price: "Preis", time: "Zeit", all: "Alle", share: "Schau dir diese Freizeit-App für Girona an: ", cartellera: "KINO", cineTitle: "Cinos" }
         };
 
         const categoryNames = {
@@ -286,7 +295,7 @@
             
             if (isCartelleraMode) {
                 grid.innerHTML = cinesListaDefinitiva.map(cine => `
-                    <div class="bg-white/20 backdrop-blur-md border border-white/30 rounded-2xl p-4 flex items-center justify-between shadow-lg active:scale-95 transition-all cursor-pointer mb-2">
+                    <div onclick="abrirCine('${cine.nombre}')" class="bg-white/20 backdrop-blur-md border border-white/30 rounded-2xl p-4 flex items-center justify-between shadow-lg active:scale-95 transition-all cursor-pointer mb-2">
                         <div class="flex items-center gap-4">
                             <div class="w-12 h-12 bg-white/30 rounded-full flex items-center justify-center text-white text-xl">
                                 <i class="fas fa-film"></i>
@@ -336,6 +345,35 @@
                     </div>
                 </div>`;
             }).join('');
+        }
+
+        // LÓGICA DE PANTALLA PELÍCULAS
+        function abrirCine(nombreCine) {
+            document.getElementById('cine-nombre-titulo').innerText = nombreCine;
+            const grid = document.getElementById('peliculas-grid');
+            
+            // DATOS DE PRUEBA (Se cambiarán por los de GitHub más adelante)
+            const pelisPrueba = [
+                { titulo: "Película 1", poster: "https://via.placeholder.com/300x450?text=Poster+1" },
+                { titulo: "Película 2", poster: "https://via.placeholder.com/300x450?text=Poster+2" },
+                { titulo: "Película 3", poster: "https://via.placeholder.com/300x450?text=Poster+3" },
+                { titulo: "Película 4", poster: "https://via.placeholder.com/300x450?text=Poster+4" }
+            ];
+
+            grid.innerHTML = pelisPrueba.map(peli => `
+                <div class="flex flex-col gap-2">
+                    <div class="aspect-[2/3] w-full bg-slate-700 rounded-2xl overflow-hidden shadow-lg border border-white/10">
+                        <img src="${peli.poster}" class="w-full h-full object-cover">
+                    </div>
+                    <p class="text-white font-bold text-sm text-center leading-tight">${peli.titulo}</p>
+                </div>
+            `).join('');
+
+            document.getElementById('pantalla-peliculas').classList.remove('hidden');
+        }
+
+        function cerrarPeliculas() {
+            document.getElementById('pantalla-peliculas').classList.add('hidden');
         }
 
         function abrirDetalle(id) {
