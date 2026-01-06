@@ -88,7 +88,7 @@
             <h1 class="text-6xl text-white font-black tracking-tighter -ml-1">GirOci</h1>
         </div>
 
-        <div class="flex flex-col gap-2 mb-8">
+        <div id="filter-container" class="flex flex-col gap-2 mb-8">
             <div id="btn-cartellera" class="select-trigger !justify-center gap-3 transition-all duration-300" onclick="activarCartellera()">
                 <i class="fas fa-film text-cyan-300"></i>
                 <span id="txt-cartellera">CARTELLERA DE CINE</span>
@@ -194,20 +194,19 @@
             isCartelleraMode = !isCartelleraMode;
             const btn = document.getElementById('btn-cartellera');
             const title = document.getElementById('txt-events-title');
+            const filterContainer = document.getElementById('filter-container');
             
             const topHeader = document.getElementById('top-header');
             const cineHeader = document.getElementById('cine-header');
             const t = translations[currentLang];
 
             if(isCartelleraMode) {
-                btn.style.background = "#10b981";
+                filterContainer.classList.add('hidden'); // OCULTA LOS TRES BOTONES
                 title.innerText = t.cineTitle;
                 topHeader.classList.add('hidden');
                 cineHeader.classList.remove('hidden');
-                document.getElementById('txt-filter-type').innerText = t.cineType;
-                document.getElementById('txt-filter-comarca').innerText = t.cineLoc;
             } else {
-                btn.style.background = "#1e5d8a";
+                filterContainer.classList.remove('hidden'); // MUESTRA LOS TRES BOTONES
                 title.innerText = t.title;
                 topHeader.classList.remove('hidden');
                 cineHeader.classList.add('hidden');
